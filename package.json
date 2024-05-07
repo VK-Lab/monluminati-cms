@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "private": true,
   "scripts": {
-    "dev": "keystone dev",
+    "dev": "PORT=3555 keystone dev",
     "start": "keystone start",
     "build": "keystone build",
     "postinstall": "keystone build --no-ui --frozen"

@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // keystone.ts
@@ -24,6 +34,7 @@ __export(keystone_exports, {
 });
 module.exports = __toCommonJS(keystone_exports);
 var import_core2 = require("@keystone-6/core");
+var import_dotenv = __toESM(require("dotenv"));
 
 // schema.ts
 var import_core = require("@keystone-6/core");
@@ -64,6 +75,9 @@ var lists = {
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: import_access.allowAll,
+    ui: {
+      isHidden: true
+    },
     // this is the fields for our Post list
     fields: {
       title: (0, import_fields.text)({ validation: { isRequired: true } }),
@@ -132,6 +146,70 @@ var lists = {
       // this can be helpful to find out all the Posts associated with a Tag
       posts: (0, import_fields.relationship)({ ref: "Post.tags", many: true })
     }
+  }),
+  Project: (0, import_core.list)({
+    // WARNING
+    //   for this starter project, anyone can create, query, update and delete anything
+    //   if you want to prevent random people on the internet from accessing your data,
+    //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
+    access: import_access.allowAll,
+    // this is the fields for our Post list
+    fields: {
+      avatar: (0, import_fields.image)({ storage: "my_local_images" }),
+      title: (0, import_fields.text)({ validation: { isRequired: true } }),
+      // the document field can be used for making rich editable content
+      //   you can find out more at https://keystonejs.com/docs/guides/document-fields
+      content: (0, import_fields_document.document)({
+        formatting: true,
+        layouts: [
+          [1, 1],
+          [1, 1, 1],
+          [2, 1],
+          [1, 2],
+          [1, 2, 1]
+        ],
+        links: true,
+        dividers: true
+      }),
+      socialWeb: (0, import_fields.text)(),
+      socialX: (0, import_fields.text)(),
+      socialDiscord: (0, import_fields.text)(),
+      socialTelegram: (0, import_fields.text)(),
+      // with this field, you can add some Tags to Posts
+      tags: (0, import_fields.relationship)({
+        // we could have used 'Tag', but then the relationship would only be 1-way
+        ref: "ProjectTag.posts",
+        // a Post can have many Tags, not just one
+        many: true,
+        // this is some customisations for changing how this will look in the AdminUI
+        ui: {
+          displayMode: "cards",
+          cardFields: ["name"],
+          inlineEdit: { fields: ["name"] },
+          linkToItem: true,
+          inlineConnect: true,
+          inlineCreate: { fields: ["name"] }
+        }
+      })
+    }
+  }),
+  // this last list is our Tag list, it only has a name field for now
+  ProjectTag: (0, import_core.list)({
+    // WARNING
+    //   for this starter project, anyone can create, query, update and delete anything
+    //   if you want to prevent random people on the internet from accessing your data,
+    //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
+    access: import_access.allowAll,
+    // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
+    ui: {
+      isHidden: true
+    },
+    // this is the fields for our Tag list
+    fields: {
+      name: (0, import_fields.text)(),
+      // this can be helpful to find out all the Projects associated with a Tag
+      posts: (0, import_fields.relationship)({ ref: "Project.tags", many: true })
+    }
   })
 };
 
@@ -169,6 +247,14 @@ var session = (0, import_session.statelessSessions)({
 });
 
 // keystone.ts
+import_dotenv.default.config();
+var {
+  S3_BUCKET_NAME: bucketName = "keystone-test",
+  S3_REGION: region = "ap-southeast-2",
+  S3_ACCESS_KEY_ID: accessKeyId = "keystone",
+  S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
+  ASSET_BASE_URL: baseUrl = "http://localhost:3555"
+} = process.env;
 var keystone_default = withAuth(
   (0, import_core2.config)({
     db: {
@@ -179,7 +265,26 @@ var keystone_default = withAuth(
       url: "file:./keystone.db"
     },
     lists,
-    session
+    session,
+    /** config */
+    storage: {
+      my_local_images: {
+        // Images that use this store will be stored on the local machine
+        kind: "local",
+        // This store is used for the image field type
+        type: "image",
+        // The URL that is returned in the Keystone GraphQL API
+        generateUrl: (path) => `${baseUrl}/images${path}`,
+        // The route that will be created in Keystone's backend to serve the images
+        serverRoute: {
+          path: "/images"
+        },
+        // Set serverRoute to null if you don't want a route to be created in Keystone
+        // serverRoute: null
+        storagePath: "public/images"
+      }
+      /** more storage */
+    }
   })
 );
 //# sourceMappingURL=config.js.map

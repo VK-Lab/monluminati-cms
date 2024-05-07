@@ -254,6 +254,175 @@ input TagCreateInput {
   posts: PostRelateToManyForCreateInput
 }
 
+type Project {
+  id: ID!
+  avatar: ImageFieldOutput
+  title: String
+  content: Project_content_Document
+  socialWeb: String
+  socialX: String
+  socialDiscord: String
+  socialTelegram: String
+  tags(where: ProjectTagWhereInput! = {}, orderBy: [ProjectTagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectTagWhereUniqueInput): [ProjectTag!]
+  tagsCount(where: ProjectTagWhereInput! = {}): Int
+}
+
+type ImageFieldOutput {
+  id: ID!
+  filesize: Int!
+  width: Int!
+  height: Int!
+  extension: ImageExtension!
+  url: String!
+}
+
+enum ImageExtension {
+  jpg
+  png
+  webp
+  gif
+}
+
+type Project_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input ProjectWhereUniqueInput {
+  id: ID
+}
+
+input ProjectWhereInput {
+  AND: [ProjectWhereInput!]
+  OR: [ProjectWhereInput!]
+  NOT: [ProjectWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  socialWeb: StringFilter
+  socialX: StringFilter
+  socialDiscord: StringFilter
+  socialTelegram: StringFilter
+  tags: ProjectTagManyRelationFilter
+}
+
+input ProjectTagManyRelationFilter {
+  every: ProjectTagWhereInput
+  some: ProjectTagWhereInput
+  none: ProjectTagWhereInput
+}
+
+input ProjectOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  socialWeb: OrderDirection
+  socialX: OrderDirection
+  socialDiscord: OrderDirection
+  socialTelegram: OrderDirection
+}
+
+input ProjectUpdateInput {
+  avatar: ImageFieldInput
+  title: String
+  content: JSON
+  socialWeb: String
+  socialX: String
+  socialDiscord: String
+  socialTelegram: String
+  tags: ProjectTagRelateToManyForUpdateInput
+}
+
+input ImageFieldInput {
+  upload: Upload!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input ProjectTagRelateToManyForUpdateInput {
+  disconnect: [ProjectTagWhereUniqueInput!]
+  set: [ProjectTagWhereUniqueInput!]
+  create: [ProjectTagCreateInput!]
+  connect: [ProjectTagWhereUniqueInput!]
+}
+
+input ProjectUpdateArgs {
+  where: ProjectWhereUniqueInput!
+  data: ProjectUpdateInput!
+}
+
+input ProjectCreateInput {
+  avatar: ImageFieldInput
+  title: String
+  content: JSON
+  socialWeb: String
+  socialX: String
+  socialDiscord: String
+  socialTelegram: String
+  tags: ProjectTagRelateToManyForCreateInput
+}
+
+input ProjectTagRelateToManyForCreateInput {
+  create: [ProjectTagCreateInput!]
+  connect: [ProjectTagWhereUniqueInput!]
+}
+
+type ProjectTag {
+  id: ID!
+  name: String
+  posts(where: ProjectWhereInput! = {}, orderBy: [ProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectWhereUniqueInput): [Project!]
+  postsCount(where: ProjectWhereInput! = {}): Int
+}
+
+input ProjectTagWhereUniqueInput {
+  id: ID
+}
+
+input ProjectTagWhereInput {
+  AND: [ProjectTagWhereInput!]
+  OR: [ProjectTagWhereInput!]
+  NOT: [ProjectTagWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  posts: ProjectManyRelationFilter
+}
+
+input ProjectManyRelationFilter {
+  every: ProjectWhereInput
+  some: ProjectWhereInput
+  none: ProjectWhereInput
+}
+
+input ProjectTagOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input ProjectTagUpdateInput {
+  name: String
+  posts: ProjectRelateToManyForUpdateInput
+}
+
+input ProjectRelateToManyForUpdateInput {
+  disconnect: [ProjectWhereUniqueInput!]
+  set: [ProjectWhereUniqueInput!]
+  create: [ProjectCreateInput!]
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectTagUpdateArgs {
+  where: ProjectTagWhereUniqueInput!
+  data: ProjectTagUpdateInput!
+}
+
+input ProjectTagCreateInput {
+  name: String
+  posts: ProjectRelateToManyForCreateInput
+}
+
+input ProjectRelateToManyForCreateInput {
+  create: [ProjectCreateInput!]
+  connect: [ProjectWhereUniqueInput!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -278,6 +447,18 @@ type Mutation {
   updateTags(data: [TagUpdateArgs!]!): [Tag]
   deleteTag(where: TagWhereUniqueInput!): Tag
   deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
+  createProject(data: ProjectCreateInput!): Project
+  createProjects(data: [ProjectCreateInput!]!): [Project]
+  updateProject(where: ProjectWhereUniqueInput!, data: ProjectUpdateInput!): Project
+  updateProjects(data: [ProjectUpdateArgs!]!): [Project]
+  deleteProject(where: ProjectWhereUniqueInput!): Project
+  deleteProjects(where: [ProjectWhereUniqueInput!]!): [Project]
+  createProjectTag(data: ProjectTagCreateInput!): ProjectTag
+  createProjectTags(data: [ProjectTagCreateInput!]!): [ProjectTag]
+  updateProjectTag(where: ProjectTagWhereUniqueInput!, data: ProjectTagUpdateInput!): ProjectTag
+  updateProjectTags(data: [ProjectTagUpdateArgs!]!): [ProjectTag]
+  deleteProjectTag(where: ProjectTagWhereUniqueInput!): ProjectTag
+  deleteProjectTags(where: [ProjectTagWhereUniqueInput!]!): [ProjectTag]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -310,6 +491,12 @@ type Query {
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int
+  projects(where: ProjectWhereInput! = {}, orderBy: [ProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectWhereUniqueInput): [Project!]
+  project(where: ProjectWhereUniqueInput!): Project
+  projectsCount(where: ProjectWhereInput! = {}): Int
+  projectTags(where: ProjectTagWhereInput! = {}, orderBy: [ProjectTagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectTagWhereUniqueInput): [ProjectTag!]
+  projectTag(where: ProjectTagWhereUniqueInput!): ProjectTag
+  projectTagsCount(where: ProjectTagWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
