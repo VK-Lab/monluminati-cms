@@ -1,0 +1,7 @@
+packages:
+  - 'packages/cms'
+  - 'packages/client'
+
+link-workspace-packages: true
+prefer-workspace-packages: true
+recursive-install: true

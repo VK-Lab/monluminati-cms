@@ -249,10 +249,10 @@ var session = (0, import_session.statelessSessions)({
 // keystone.ts
 import_dotenv.default.config();
 var {
-  S3_BUCKET_NAME: bucketName = "keystone-test",
-  S3_REGION: region = "ap-southeast-2",
-  S3_ACCESS_KEY_ID: accessKeyId = "keystone",
-  S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
+  // S3_BUCKET_NAME: bucketName = 'keystone-test',
+  // S3_REGION: region = 'ap-southeast-2',
+  // S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
+  // S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
   ASSET_BASE_URL: baseUrl = "http://localhost:3555"
 } = process.env;
 var keystone_default = withAuth(
