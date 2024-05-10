@@ -253,8 +253,11 @@ var {
   // S3_REGION: region = 'ap-southeast-2',
   // S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
   // S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
-  ASSET_BASE_URL: baseUrl = "http://localhost:3555"
+  ASSET_BASE_URL: baseUrl = "http://localhost:3555",
+  MODE
 } = process.env;
+var IS_DEV = MODE === "development" || process.env.NODE_ENV === "development";
+var PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3555;
 var keystone_default = withAuth(
   (0, import_core2.config)({
     db: {
@@ -266,6 +269,15 @@ var keystone_default = withAuth(
     },
     lists,
     session,
+    server: {
+      port: PORT,
+      cors: IS_DEV ? {
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+        optionsSuccessStatus: 204
+      } : void 0
+    },
     /** config */
     storage: {
       my_local_images: {

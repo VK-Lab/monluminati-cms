@@ -6,7 +6,7 @@
 //   you can find out more at https://keystonejs.com/docs/apis/config
 
 import { config } from "@keystone-6/core";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
 
@@ -21,8 +21,12 @@ const {
   // S3_REGION: region = 'ap-southeast-2',
   // S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
   // S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
-  ASSET_BASE_URL: baseUrl = 'http://localhost:3555',
+  ASSET_BASE_URL: baseUrl = "http://localhost:3555",
+  MODE
 } = process.env;
+
+const IS_DEV = MODE === "development" || process.env.NODE_ENV === "development";
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3555;
 
 export default withAuth(
   config({
@@ -35,6 +39,17 @@ export default withAuth(
     },
     lists,
     session,
+    server: {
+      port: PORT,
+      cors: IS_DEV
+        ? {
+            origin: "*",
+            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+            preflightContinue: false,
+            optionsSuccessStatus: 204
+          }
+        : undefined
+    },
     /** config */
     storage: {
       my_local_images: {
