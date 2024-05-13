@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "PORT=3555 keystone dev",
     "start": "keystone start",
-    "build": "keystone build",
+    "build": "yarn && yarn keystone build && yarn keystone prisma migrate deploy",
     "postinstall": "keystone build --no-ui --frozen"
   },
   "dependencies": {
