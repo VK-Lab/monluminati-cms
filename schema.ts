@@ -16,6 +16,7 @@ import {
   relationship,
   password,
   timestamp,
+  checkbox,
   select
 } from "@keystone-6/core/fields";
 
@@ -160,7 +161,7 @@ export const lists: Lists = {
     // this is the fields for our Post list
     fields: {
       avatar: image({ storage: "my_local_images" }),
-      title: text({ validation: { isRequired: true } }),
+      name: text({ validation: { isRequired: true } }),
 
       // the document field can be used for making rich editable content
       //   you can find out more at https://keystonejs.com/docs/guides/document-fields
@@ -185,7 +186,7 @@ export const lists: Lists = {
       // with this field, you can add some Tags to Posts
       tags: relationship({
         // we could have used 'Tag', but then the relationship would only be 1-way
-        ref: "ProjectTag.posts",
+        ref: "ProjectTag.tags",
 
         // a Post can have many Tags, not just one
         many: true,
@@ -199,6 +200,25 @@ export const lists: Lists = {
           inlineConnect: true,
           inlineCreate: { fields: ["name"] }
         }
+      }), 
+
+      categories: relationship({
+        ref: "Category.categories",
+        many: true,
+
+        ui: {
+          displayMode: "cards",
+          cardFields: ["name"],
+          inlineEdit: { fields: ["name"] },
+          linkToItem: true,
+          inlineConnect: true,
+          inlineCreate: { fields: ["name"] }
+        }
+      }),
+
+      isAnnounced: checkbox({ defaultValue: false }),
+      isNative: checkbox({ defaultValue: false, 
+        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
       })
     }
   }),
@@ -220,7 +240,20 @@ export const lists: Lists = {
     fields: {
       name: text(),
       // this can be helpful to find out all the Projects associated with a Tag
-      posts: relationship({ ref: "Project.tags", many: true })
+      tags: relationship({ ref: "Project.tags", many: true })
     }
-  })
+  }),
+
+  Category: list({
+    access: allowAll,
+    ui: {
+      isHidden: true
+    },
+
+    fields: {
+      name: text(),
+      categories: relationship({ ref: "Project.categories", many: true })
+    }
+  }),
+  
 };

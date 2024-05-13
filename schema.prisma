@@ -44,17 +44,26 @@ model Project {
   avatar_width     Int?
   avatar_height    Int?
   avatar_extension String?
-  title            String       @default("")
+  name             String       @default("")
   content          String       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   socialWeb        String       @default("")
   socialX          String       @default("")
   socialDiscord    String       @default("")
   socialTelegram   String       @default("")
   tags             ProjectTag[] @relation("Project_tags")
+  categories       Category[]   @relation("Category_categories")
+  isAnnounced      Boolean      @default(false)
+  isNative         Boolean      @default(false)
 }
 
 model ProjectTag {
-  id    String    @id @default(cuid())
-  name  String    @default("")
-  posts Project[] @relation("Project_tags")
+  id   String    @id @default(cuid())
+  name String    @default("")
+  tags Project[] @relation("Project_tags")
+}
+
+model Category {
+  id         String    @id @default(cuid())
+  name       String    @default("")
+  categories Project[] @relation("Category_categories")
 }

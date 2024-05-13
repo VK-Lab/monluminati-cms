@@ -156,7 +156,7 @@ var lists = {
     // this is the fields for our Post list
     fields: {
       avatar: (0, import_fields.image)({ storage: "my_local_images" }),
-      title: (0, import_fields.text)({ validation: { isRequired: true } }),
+      name: (0, import_fields.text)({ validation: { isRequired: true } }),
       // the document field can be used for making rich editable content
       //   you can find out more at https://keystonejs.com/docs/guides/document-fields
       content: (0, import_fields_document.document)({
@@ -178,7 +178,7 @@ var lists = {
       // with this field, you can add some Tags to Posts
       tags: (0, import_fields.relationship)({
         // we could have used 'Tag', but then the relationship would only be 1-way
-        ref: "ProjectTag.posts",
+        ref: "ProjectTag.tags",
         // a Post can have many Tags, not just one
         many: true,
         // this is some customisations for changing how this will look in the AdminUI
@@ -190,6 +190,23 @@ var lists = {
           inlineConnect: true,
           inlineCreate: { fields: ["name"] }
         }
+      }),
+      categories: (0, import_fields.relationship)({
+        ref: "Category.categories",
+        many: true,
+        ui: {
+          displayMode: "cards",
+          cardFields: ["name"],
+          inlineEdit: { fields: ["name"] },
+          linkToItem: true,
+          inlineConnect: true,
+          inlineCreate: { fields: ["name"] }
+        }
+      }),
+      isAnnounced: (0, import_fields.checkbox)({ defaultValue: false }),
+      isNative: (0, import_fields.checkbox)({
+        defaultValue: false
+        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
       })
     }
   }),
@@ -208,7 +225,17 @@ var lists = {
     fields: {
       name: (0, import_fields.text)(),
       // this can be helpful to find out all the Projects associated with a Tag
-      posts: (0, import_fields.relationship)({ ref: "Project.tags", many: true })
+      tags: (0, import_fields.relationship)({ ref: "Project.tags", many: true })
+    }
+  }),
+  Category: (0, import_core.list)({
+    access: import_access.allowAll,
+    ui: {
+      isHidden: true
+    },
+    fields: {
+      name: (0, import_fields.text)(),
+      categories: (0, import_fields.relationship)({ ref: "Project.categories", many: true })
     }
   })
 };

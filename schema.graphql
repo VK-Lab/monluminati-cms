@@ -257,7 +257,7 @@ input TagCreateInput {
 type Project {
   id: ID!
   avatar: ImageFieldOutput
-  title: String
+  name: String
   content: Project_content_Document
   socialWeb: String
   socialX: String
@@ -265,6 +265,10 @@ type Project {
   socialTelegram: String
   tags(where: ProjectTagWhereInput! = {}, orderBy: [ProjectTagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectTagWhereUniqueInput): [ProjectTag!]
   tagsCount(where: ProjectTagWhereInput! = {}): Int
+  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  categoriesCount(where: CategoryWhereInput! = {}): Int
+  isAnnounced: Boolean
+  isNative: Boolean
 }
 
 type ImageFieldOutput {
@@ -296,12 +300,15 @@ input ProjectWhereInput {
   OR: [ProjectWhereInput!]
   NOT: [ProjectWhereInput!]
   id: IDFilter
-  title: StringFilter
+  name: StringFilter
   socialWeb: StringFilter
   socialX: StringFilter
   socialDiscord: StringFilter
   socialTelegram: StringFilter
   tags: ProjectTagManyRelationFilter
+  categories: CategoryManyRelationFilter
+  isAnnounced: BooleanFilter
+  isNative: BooleanFilter
 }
 
 input ProjectTagManyRelationFilter {
@@ -310,24 +317,40 @@ input ProjectTagManyRelationFilter {
   none: ProjectTagWhereInput
 }
 
+input CategoryManyRelationFilter {
+  every: CategoryWhereInput
+  some: CategoryWhereInput
+  none: CategoryWhereInput
+}
+
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
 input ProjectOrderByInput {
   id: OrderDirection
-  title: OrderDirection
+  name: OrderDirection
   socialWeb: OrderDirection
   socialX: OrderDirection
   socialDiscord: OrderDirection
   socialTelegram: OrderDirection
+  isAnnounced: OrderDirection
+  isNative: OrderDirection
 }
 
 input ProjectUpdateInput {
   avatar: ImageFieldInput
-  title: String
+  name: String
   content: JSON
   socialWeb: String
   socialX: String
   socialDiscord: String
   socialTelegram: String
   tags: ProjectTagRelateToManyForUpdateInput
+  categories: CategoryRelateToManyForUpdateInput
+  isAnnounced: Boolean
+  isNative: Boolean
 }
 
 input ImageFieldInput {
@@ -344,6 +367,13 @@ input ProjectTagRelateToManyForUpdateInput {
   connect: [ProjectTagWhereUniqueInput!]
 }
 
+input CategoryRelateToManyForUpdateInput {
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  create: [CategoryCreateInput!]
+  connect: [CategoryWhereUniqueInput!]
+}
+
 input ProjectUpdateArgs {
   where: ProjectWhereUniqueInput!
   data: ProjectUpdateInput!
@@ -351,13 +381,16 @@ input ProjectUpdateArgs {
 
 input ProjectCreateInput {
   avatar: ImageFieldInput
-  title: String
+  name: String
   content: JSON
   socialWeb: String
   socialX: String
   socialDiscord: String
   socialTelegram: String
   tags: ProjectTagRelateToManyForCreateInput
+  categories: CategoryRelateToManyForCreateInput
+  isAnnounced: Boolean
+  isNative: Boolean
 }
 
 input ProjectTagRelateToManyForCreateInput {
@@ -365,11 +398,16 @@ input ProjectTagRelateToManyForCreateInput {
   connect: [ProjectTagWhereUniqueInput!]
 }
 
+input CategoryRelateToManyForCreateInput {
+  create: [CategoryCreateInput!]
+  connect: [CategoryWhereUniqueInput!]
+}
+
 type ProjectTag {
   id: ID!
   name: String
-  posts(where: ProjectWhereInput! = {}, orderBy: [ProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectWhereUniqueInput): [Project!]
-  postsCount(where: ProjectWhereInput! = {}): Int
+  tags(where: ProjectWhereInput! = {}, orderBy: [ProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectWhereUniqueInput): [Project!]
+  tagsCount(where: ProjectWhereInput! = {}): Int
 }
 
 input ProjectTagWhereUniqueInput {
@@ -382,7 +420,7 @@ input ProjectTagWhereInput {
   NOT: [ProjectTagWhereInput!]
   id: IDFilter
   name: StringFilter
-  posts: ProjectManyRelationFilter
+  tags: ProjectManyRelationFilter
 }
 
 input ProjectManyRelationFilter {
@@ -398,7 +436,7 @@ input ProjectTagOrderByInput {
 
 input ProjectTagUpdateInput {
   name: String
-  posts: ProjectRelateToManyForUpdateInput
+  tags: ProjectRelateToManyForUpdateInput
 }
 
 input ProjectRelateToManyForUpdateInput {
@@ -415,12 +453,52 @@ input ProjectTagUpdateArgs {
 
 input ProjectTagCreateInput {
   name: String
-  posts: ProjectRelateToManyForCreateInput
+  tags: ProjectRelateToManyForCreateInput
 }
 
 input ProjectRelateToManyForCreateInput {
   create: [ProjectCreateInput!]
   connect: [ProjectWhereUniqueInput!]
+}
+
+type Category {
+  id: ID!
+  name: String
+  categories(where: ProjectWhereInput! = {}, orderBy: [ProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectWhereUniqueInput): [Project!]
+  categoriesCount(where: ProjectWhereInput! = {}): Int
+}
+
+input CategoryWhereUniqueInput {
+  id: ID
+}
+
+input CategoryWhereInput {
+  AND: [CategoryWhereInput!]
+  OR: [CategoryWhereInput!]
+  NOT: [CategoryWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  categories: ProjectManyRelationFilter
+}
+
+input CategoryOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input CategoryUpdateInput {
+  name: String
+  categories: ProjectRelateToManyForUpdateInput
+}
+
+input CategoryUpdateArgs {
+  where: CategoryWhereUniqueInput!
+  data: CategoryUpdateInput!
+}
+
+input CategoryCreateInput {
+  name: String
+  categories: ProjectRelateToManyForCreateInput
 }
 
 """
@@ -459,6 +537,12 @@ type Mutation {
   updateProjectTags(data: [ProjectTagUpdateArgs!]!): [ProjectTag]
   deleteProjectTag(where: ProjectTagWhereUniqueInput!): ProjectTag
   deleteProjectTags(where: [ProjectTagWhereUniqueInput!]!): [ProjectTag]
+  createCategory(data: CategoryCreateInput!): Category
+  createCategories(data: [CategoryCreateInput!]!): [Category]
+  updateCategory(where: CategoryWhereUniqueInput!, data: CategoryUpdateInput!): Category
+  updateCategories(data: [CategoryUpdateArgs!]!): [Category]
+  deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -497,6 +581,9 @@ type Query {
   projectTags(where: ProjectTagWhereInput! = {}, orderBy: [ProjectTagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProjectTagWhereUniqueInput): [ProjectTag!]
   projectTag(where: ProjectTagWhereUniqueInput!): ProjectTag
   projectTagsCount(where: ProjectTagWhereInput! = {}): Int
+  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  category(where: CategoryWhereUniqueInput!): Category
+  categoriesCount(where: CategoryWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
