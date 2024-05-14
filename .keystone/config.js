@@ -34,7 +34,7 @@ __export(keystone_exports, {
 });
 module.exports = __toCommonJS(keystone_exports);
 var import_core2 = require("@keystone-6/core");
-var import_dotenv = __toESM(require("dotenv"));
+var dotenv = __toESM(require("dotenv"));
 
 // schema.ts
 var import_core = require("@keystone-6/core");
@@ -76,7 +76,7 @@ var lists = {
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: import_access.allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
     // this is the fields for our Post list
     fields: {
@@ -138,7 +138,7 @@ var lists = {
     access: import_access.allowAll,
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
     // this is the fields for our Tag list
     fields: {
@@ -203,10 +203,29 @@ var lists = {
           inlineCreate: { fields: ["name"] }
         }
       }),
-      isAnnounced: (0, import_fields.checkbox)({ defaultValue: false }),
+      isAnnounced: (0, import_fields.checkbox)({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
       isNative: (0, import_fields.checkbox)({
-        defaultValue: false
-        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
+      isLeadingProject: (0, import_fields.checkbox)({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
       })
     }
   }),
@@ -219,7 +238,7 @@ var lists = {
     access: import_access.allowAll,
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
     // this is the fields for our Tag list
     fields: {
@@ -231,7 +250,7 @@ var lists = {
   Category: (0, import_core.list)({
     access: import_access.allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
     fields: {
       name: (0, import_fields.text)(),
@@ -274,7 +293,7 @@ var session = (0, import_session.statelessSessions)({
 });
 
 // keystone.ts
-import_dotenv.default.config();
+dotenv.config();
 var {
   // S3_BUCKET_NAME: bucketName = 'keystone-test',
   // S3_REGION: region = 'ap-southeast-2',

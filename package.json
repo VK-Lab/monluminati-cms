@@ -6,7 +6,8 @@
     "dev": "PORT=3555 keystone dev",
     "start": "keystone start",
     "build": "yarn && yarn keystone build && yarn keystone prisma migrate deploy",
-    "postinstall": "keystone build --no-ui --frozen"
+    "postinstall": "keystone build --no-ui --frozen",
+    "seed-data": "tsx seed-data.ts"
   },
   "dependencies": {
     "@keystone-6/auth": "^8.0.0",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "fp-ts": "^2.16.5",
-    "prisma": "^5.13.0"
+    "prisma": "^5.13.0",
+    "tsx": "^4.10.2"
   }
 }

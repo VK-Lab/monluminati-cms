@@ -54,6 +54,7 @@ model Project {
   categories       Category[]   @relation("Category_categories")
   isAnnounced      Boolean      @default(false)
   isNative         Boolean      @default(false)
+  isLeadingProject Boolean      @default(false)
 }
 
 model ProjectTag {

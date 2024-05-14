@@ -69,7 +69,7 @@ export const lists: Lists = {
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
     // this is the fields for our Post list
     fields: {
@@ -140,7 +140,7 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     // this is the fields for our Tag list
@@ -200,7 +200,7 @@ export const lists: Lists = {
           inlineConnect: true,
           inlineCreate: { fields: ["name"] }
         }
-      }), 
+      }),
 
       categories: relationship({
         ref: "Category.categories",
@@ -216,9 +216,29 @@ export const lists: Lists = {
         }
       }),
 
-      isAnnounced: checkbox({ defaultValue: false }),
-      isNative: checkbox({ defaultValue: false, 
-        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
+      isAnnounced: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
+      isNative: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
+      isLeadingProject: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
       })
     }
   }),
@@ -233,7 +253,7 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     // this is the fields for our Tag list
@@ -247,13 +267,12 @@ export const lists: Lists = {
   Category: list({
     access: allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     fields: {
       name: text(),
       categories: relationship({ ref: "Project.categories", many: true })
     }
-  }),
-  
+  })
 };
