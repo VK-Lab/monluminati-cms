@@ -205,7 +205,7 @@ export const lists: Lists = {
       categories: relationship({
         ref: "Category.categories",
         many: true,
-
+ 
         ui: {
           displayMode: "cards",
           cardFields: ["name"],
