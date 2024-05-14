@@ -155,7 +155,7 @@ var lists = {
     access: import_access.allowAll,
     // this is the fields for our Post list
     fields: {
-      avatar: (0, import_fields.image)({ storage: "my_local_images" }),
+      avatar: (0, import_fields.image)({ storage: "my_s3_files" }),
       name: (0, import_fields.text)({ validation: { isRequired: true } }),
       // the document field can be used for making rich editable content
       //   you can find out more at https://keystonejs.com/docs/guides/document-fields
@@ -206,7 +206,7 @@ var lists = {
       isAnnounced: (0, import_fields.checkbox)({ defaultValue: false }),
       isNative: (0, import_fields.checkbox)({
         defaultValue: false
-        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
+        // ui: { itemView: SIDEBAR_FIELD_POSITION }
       })
     }
   }),
@@ -276,10 +276,10 @@ var session = (0, import_session.statelessSessions)({
 // keystone.ts
 import_dotenv.default.config();
 var {
-  // S3_BUCKET_NAME: bucketName = 'keystone-test',
-  // S3_REGION: region = 'ap-southeast-2',
-  // S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
-  // S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
+  S3_BUCKET_NAME: bucketName = "keystone-test",
+  S3_REGION: region = "ap-southeast-1",
+  S3_ACCESS_KEY_ID: accessKeyId = "keystone",
+  S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
   ASSET_BASE_URL: baseUrl = "http://localhost:3555",
   MODE
 } = process.env;
@@ -307,20 +307,21 @@ var keystone_default = withAuth(
     },
     /** config */
     storage: {
-      my_local_images: {
-        // Images that use this store will be stored on the local machine
-        kind: "local",
-        // This store is used for the image field type
+      my_s3_files: {
+        kind: "s3",
+        // this storage uses S3
         type: "image",
-        // The URL that is returned in the Keystone GraphQL API
-        generateUrl: (path) => `${baseUrl}/images${path}`,
-        // The route that will be created in Keystone's backend to serve the images
-        serverRoute: {
-          path: "/images"
-        },
-        // Set serverRoute to null if you don't want a route to be created in Keystone
-        // serverRoute: null
-        storagePath: "public/images"
+        // only for files
+        bucketName,
+        // from your S3_BUCKET_NAME environment variable
+        region,
+        // from your S3_REGION environment variable
+        accessKeyId,
+        // from your S3_ACCESS_KEY_ID environment variable
+        secretAccessKey,
+        // from your S3_SECRET_ACCESS_KEY environment variable
+        signed: { expiry: 3600 }
+        // (optional) links will be signed with an expiry of 3600 seconds (an hour)
       }
       /** more storage */
     }

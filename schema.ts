@@ -17,7 +17,7 @@ import {
   password,
   timestamp,
   checkbox,
-  select
+  select, file
 } from "@keystone-6/core/fields";
 
 // the document field is a more complicated field, so it has it's own package
@@ -160,7 +160,7 @@ export const lists: Lists = {
 
     // this is the fields for our Post list
     fields: {
-      avatar: image({ storage: "my_local_images" }),
+      avatar: image({ storage: "my_s3_files" }),
       name: text({ validation: { isRequired: true } }),
 
       // the document field can be used for making rich editable content
@@ -200,7 +200,7 @@ export const lists: Lists = {
           inlineConnect: true,
           inlineCreate: { fields: ["name"] }
         }
-      }), 
+      }),
 
       categories: relationship({
         ref: "Category.categories",
@@ -217,8 +217,8 @@ export const lists: Lists = {
       }),
 
       isAnnounced: checkbox({ defaultValue: false }),
-      isNative: checkbox({ defaultValue: false, 
-        // ui: { itemView: SIDEBAR_FIELD_POSITION } 
+      isNative: checkbox({ defaultValue: false,
+        // ui: { itemView: SIDEBAR_FIELD_POSITION }
       })
     }
   }),
@@ -255,5 +255,5 @@ export const lists: Lists = {
       categories: relationship({ ref: "Project.categories", many: true })
     }
   }),
-  
+
 };
