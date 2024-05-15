@@ -21,7 +21,7 @@ const {
   S3_REGION: region = "ap-southeast-1",
   S3_ACCESS_KEY_ID: accessKeyId = "keystone",
   S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
-  CLIENT_BASE_URL: clientOrigin = "http://localhost:3555",
+  CLIENT_BASE_URL: clientOrigin = "http://localhost:3000",
   MODE
 } = process.env;
 
@@ -46,7 +46,8 @@ export default withAuth(
             optionsSuccessStatus: 204
           }
         : {
-            origin: ["*", clientOrigin]
+            origin: ["*"]
+            // origin: [clientOrigin]
           }
     },
     /** config */
