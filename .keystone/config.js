@@ -320,7 +320,7 @@ var keystone_default = withAuth(
         preflightContinue: false,
         optionsSuccessStatus: 204
       } : {
-        origin: [clientOrigin]
+        origin: ["*", clientOrigin]
       }
     },
     /** config */

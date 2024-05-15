@@ -46,7 +46,7 @@ export default withAuth(
             optionsSuccessStatus: 204
           }
         : {
-            origin: [clientOrigin]
+            origin: ["*", clientOrigin]
           }
     },
     /** config */
