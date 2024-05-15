@@ -259,6 +259,11 @@ var lists = {
   })
 };
 
+// constants.ts
+var PLAYGROUND_GQL = Boolean(
+  process.env.PLAYGROUND_GQL === "true"
+);
+
 // auth.ts
 var import_crypto = require("crypto");
 var import_auth = require("@keystone-6/auth");
@@ -299,7 +304,7 @@ var {
   S3_REGION: region = "ap-southeast-1",
   S3_ACCESS_KEY_ID: accessKeyId = "keystone",
   S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
-  CLIENT_BASE_URL: clientOrigin = "http://localhost:3555",
+  CLIENT_BASE_URL: clientOrigin = "http://localhost:3000",
   MODE
 } = process.env;
 var IS_DEV = MODE === "development" || process.env.NODE_ENV === "development";
@@ -320,8 +325,14 @@ var keystone_default = withAuth(
         preflightContinue: false,
         optionsSuccessStatus: 204
       } : {
-        origin: ["*", clientOrigin]
+        origin: ["http://localhost:3000", clientOrigin]
       }
+    },
+    graphql: {
+      apolloConfig: {
+        csrfPrevention: IS_DEV ? false : true
+      },
+      playground: PLAYGROUND_GQL
     },
     /** config */
     storage: {
