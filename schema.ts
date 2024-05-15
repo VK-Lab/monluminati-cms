@@ -17,8 +17,8 @@ import {
   password,
   timestamp,
   checkbox,
-  select, file
 } from "@keystone-6/core/fields";
+
 
 // the document field is a more complicated field, so it has it's own package
 import { document } from "@keystone-6/fields-document";
@@ -69,7 +69,7 @@ export const lists: Lists = {
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
     // this is the fields for our Post list
     fields: {
@@ -140,7 +140,7 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     // this is the fields for our Tag list
@@ -157,7 +157,7 @@ export const lists: Lists = {
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
-
+ 
     // this is the fields for our Post list
     fields: {
       avatar: image({ storage: "my_s3_files" }),
@@ -205,7 +205,7 @@ export const lists: Lists = {
       categories: relationship({
         ref: "Category.categories",
         many: true,
-
+ 
         ui: {
           displayMode: "cards",
           cardFields: ["name"],
@@ -216,9 +216,29 @@ export const lists: Lists = {
         }
       }),
 
-      isAnnounced: checkbox({ defaultValue: false }),
-      isNative: checkbox({ defaultValue: false,
-        // ui: { itemView: SIDEBAR_FIELD_POSITION }
+      isAnnounced: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
+      isNative: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
+      }),
+      isLeadingProject: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
       })
     }
   }),
@@ -233,7 +253,7 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     // this is the fields for our Tag list
@@ -247,13 +267,12 @@ export const lists: Lists = {
   Category: list({
     access: allowAll,
     ui: {
-      isHidden: true
+      isHidden: false
     },
 
     fields: {
       name: text(),
       categories: relationship({ ref: "Project.categories", many: true })
     }
-  }),
-
+  })
 };

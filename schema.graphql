@@ -269,6 +269,7 @@ type Project {
   categoriesCount(where: CategoryWhereInput! = {}): Int
   isAnnounced: Boolean
   isNative: Boolean
+  isLeadingProject: Boolean
 }
 
 type ImageFieldOutput {
@@ -309,6 +310,7 @@ input ProjectWhereInput {
   categories: CategoryManyRelationFilter
   isAnnounced: BooleanFilter
   isNative: BooleanFilter
+  isLeadingProject: BooleanFilter
 }
 
 input ProjectTagManyRelationFilter {
@@ -337,6 +339,7 @@ input ProjectOrderByInput {
   socialTelegram: OrderDirection
   isAnnounced: OrderDirection
   isNative: OrderDirection
+  isLeadingProject: OrderDirection
 }
 
 input ProjectUpdateInput {
@@ -351,6 +354,7 @@ input ProjectUpdateInput {
   categories: CategoryRelateToManyForUpdateInput
   isAnnounced: Boolean
   isNative: Boolean
+  isLeadingProject: Boolean
 }
 
 input ImageFieldInput {
@@ -391,6 +395,7 @@ input ProjectCreateInput {
   categories: CategoryRelateToManyForCreateInput
   isAnnounced: Boolean
   isNative: Boolean
+  isLeadingProject: Boolean
 }
 
 input ProjectTagRelateToManyForCreateInput {

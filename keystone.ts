@@ -6,7 +6,7 @@
 //   you can find out more at https://keystonejs.com/docs/apis/config
 
 import { config } from "@keystone-6/core";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
 
@@ -31,9 +31,6 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3555;
 export default withAuth(
   config({
     db: {
-      // we're using sqlite for the fastest startup experience
-      //   for more information on what database might be appropriate for you
-      //   see https://keystonejs.com/docs/guides/choosing-a-database#title
       provider: "sqlite",
       url: "file:./keystone.db"
     },
