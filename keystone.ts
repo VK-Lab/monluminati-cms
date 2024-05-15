@@ -46,7 +46,7 @@ export default withAuth(
             optionsSuccessStatus: 204
           }
         : {
-            origin: ["http://localhost:3000", clientOrigin]
+            origin: [clientOrigin]
           }
     },
     graphql: {
