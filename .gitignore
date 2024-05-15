@@ -5,3 +5,4 @@ keystone.db
 
 public/images
 public/uploads
+.env
