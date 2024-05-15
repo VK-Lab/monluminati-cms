@@ -9,7 +9,7 @@ import { config } from "@keystone-6/core";
 import * as dotenv from "dotenv";
 // to keep this file tidy, we define our schema in a different file
 import { lists } from "./schema";
-
+import { PLAYGROUND_GQL } from "./constants";
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
@@ -46,9 +46,16 @@ export default withAuth(
             optionsSuccessStatus: 204
           }
         : {
-            origin: ["http://localhost:3000", clientOrigin],
+            origin: ["http://localhost:3000", clientOrigin]
           }
     },
+    graphql: {
+      apolloConfig: {
+        csrfPrevention: IS_DEV ? false : true
+      },
+      playground: PLAYGROUND_GQL
+    },
+      
     /** config */
     storage: {
       my_s3_files: {
