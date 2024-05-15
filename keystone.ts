@@ -17,11 +17,12 @@ import { withAuth, session } from "./auth";
 dotenv.config();
 
 const {
-  S3_BUCKET_NAME: bucketName = 'keystone-test',
-  S3_REGION: region = 'ap-southeast-1',
-  S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
-  S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
+  S3_BUCKET_NAME: bucketName = "keystone-test",
+  S3_REGION: region = "ap-southeast-1",
+  S3_ACCESS_KEY_ID: accessKeyId = "keystone",
+  S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
   ASSET_BASE_URL: baseUrl = "http://localhost:3555",
+  CLIENT_BASE_URL: clientOrigin = "http://localhost:3000",
   MODE
 } = process.env;
 
@@ -34,7 +35,7 @@ export default withAuth(
       provider: "sqlite",
       url: "file:./keystone.db"
     },
-    lists,
+    lists,  
     session,
     server: {
       port: PORT,
@@ -45,19 +46,21 @@ export default withAuth(
             preflightContinue: false,
             optionsSuccessStatus: 204
           }
-        : undefined
+        : {
+            origin: [clientOrigin]
+          }
     },
     /** config */
     storage: {
       my_s3_files: {
-        kind: 's3', // this storage uses S3
-        type: 'image', // only for files
+        kind: "s3", // this storage uses S3
+        type: "image", // only for files
         bucketName, // from your S3_BUCKET_NAME environment variable
         region, // from your S3_REGION environment variable
         accessKeyId, // from your S3_ACCESS_KEY_ID environment variable
         secretAccessKey, // from your S3_SECRET_ACCESS_KEY environment variable
-        signed: { expiry: 3600 }, // (optional) links will be signed with an expiry of 3600 seconds (an hour)
-      },
+        signed: { expiry: 3600 } // (optional) links will be signed with an expiry of 3600 seconds (an hour)
+      }
       /** more storage */
     }
   })
