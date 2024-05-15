@@ -46,8 +46,7 @@ export default withAuth(
             optionsSuccessStatus: 204
           }
         : {
-            origin: ["*"]
-            // origin: [clientOrigin]
+            origin: ["http://localhost:3000", clientOrigin],
           }
     },
     /** config */
