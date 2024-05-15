@@ -21,8 +21,7 @@ const {
   S3_REGION: region = "ap-southeast-1",
   S3_ACCESS_KEY_ID: accessKeyId = "keystone",
   S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
-  ASSET_BASE_URL: baseUrl = "http://localhost:3555",
-  CLIENT_BASE_URL: clientOrigin = "http://localhost:3000",
+  CLIENT_BASE_URL: clientOrigin = "http://localhost:3555",
   MODE
 } = process.env;
 
@@ -35,7 +34,7 @@ export default withAuth(
       provider: "sqlite",
       url: "file:./keystone.db"
     },
-    lists,  
+    lists,
     session,
     server: {
       port: PORT,

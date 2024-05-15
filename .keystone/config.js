@@ -299,7 +299,7 @@ var {
   S3_REGION: region = "ap-southeast-1",
   S3_ACCESS_KEY_ID: accessKeyId = "keystone",
   S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
-  ASSET_BASE_URL: baseUrl = "http://localhost:3555",
+  CLIENT_BASE_URL: clientOrigin = "http://localhost:3555",
   MODE
 } = process.env;
 var IS_DEV = MODE === "development" || process.env.NODE_ENV === "development";
@@ -319,7 +319,9 @@ var keystone_default = withAuth(
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         preflightContinue: false,
         optionsSuccessStatus: 204
-      } : void 0
+      } : {
+        origin: [clientOrigin]
+      }
     },
     /** config */
     storage: {
