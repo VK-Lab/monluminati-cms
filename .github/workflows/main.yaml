@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Mainnet Environment Variables
+        uses: tw3lveparsecs/github-actions-setvars@latest
+        with:
+          envFilePath: ./.github/variables/mainVars.env
       - name: SSH and deploy
         uses: appleboy/ssh-action@master
         with:
