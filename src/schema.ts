@@ -157,10 +157,11 @@ export const lists: Lists = {
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
- 
+
     // this is the fields for our Post list
     fields: {
       avatar: image({ storage: "my_s3_files" }),
+      banner: image({ storage: "my_s3_files" }),
       name: text({ validation: { isRequired: true } }),
 
       // the document field can be used for making rich editable content
