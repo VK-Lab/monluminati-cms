@@ -10,6 +10,8 @@
     "seed-data": "tsx seed-data.ts"
   },
   "dependencies": {
+    "@graphql-tools/merge": "^9.0.4",
+    "@graphql-tools/schema": "^10.0.3",
     "@keystone-6/auth": "^8.0.0",
     "@keystone-6/core": "^6.1.0",
     "@keystone-6/fields-document": "^9.0.0",

@@ -1,0 +1,17 @@
+type contributor {
+  avatar: String,
+  discriminator: String,
+  guild_id: String,
+  id: String,
+  message_count: Float,
+  monetize_xp_boost: Float,
+  username: String,
+  xp: Float,
+  is_monetize_subscriber: Boolean,
+  detailed_xp: [Float],
+  level: Float
+}
+
+type Query {
+  topContributors: [contributor]
+}

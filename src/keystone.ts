@@ -13,6 +13,7 @@ import { PLAYGROUND_GQL } from "./constants";
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
+import extendGraphQLSchema from "./extendSchema";
 
 dotenv.config();
 
@@ -50,9 +51,10 @@ export default withAuth(
           }
     },
     graphql: {
+      extendGraphqlSchema: extendGraphQLSchema,
       path: "/api/graphql",
       apolloConfig: {
-        csrfPrevention: IS_DEV ? false : true
+        // csrfPrevention: IS_DEV ? false : true
       },
       playground: PLAYGROUND_GQL,
       schemaPath: "../schema.graphql"
