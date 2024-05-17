@@ -7,7 +7,7 @@
     "start": "keystone start",
     "build": "yarn && yarn keystone build && yarn keystone prisma migrate deploy",
     "postinstall": "keystone build --no-ui --frozen",
-    "seed-data": "tsx seed-data.ts"
+    "seed-data": "tsx ./seed-data/seed-data.ts"
   },
   "dependencies": {
     "@graphql-tools/merge": "^9.0.4",
