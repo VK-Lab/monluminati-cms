@@ -6,28 +6,35 @@ import path from "path";
 
 const baseFolder = path.join(process.cwd(), "./src/extend-gql");
 const extendSchemaTypes = [
-  readFileSync(path.join(baseFolder, "extendSchema.gql")).toString("utf-8"),
+  readFileSync(path.join(baseFolder, "extendSchema.gql")).toString("utf-8")
 ];
 
 const extendGraphQLSchema = (schema: GraphQLSchema): GraphQLSchema => {
   const result = mergeSchemas({
     schemas: [schema],
-    typeDefs: mergeTypeDefs([
-      extendSchemaTypes,
-    ]),
+    typeDefs: mergeTypeDefs([extendSchemaTypes]),
     resolvers: {
       Query: {
         topContributors: async () => {
           try {
-            const response = await fetch("https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?page=1");
+            const response = await fetch(
+              "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?page=1"
+            );
             const result = await response.json();
-            return result?.players ?? [];
+            const transformedData = (result?.players ?? []).map(
+              (player: any) => ({
+                ...player,
+                avatarUrl: `https://cdn.discordapp.com/avatars/${player.id}/${player.avatar}.webp?size=128`
+              })
+            );
+
+            return transformedData;
           } catch (error: any) {
             return [];
           }
         }
       }
-    },
+    }
   });
 
   return result;

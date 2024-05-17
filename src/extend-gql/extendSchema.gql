@@ -10,6 +10,7 @@ type contributor {
   is_monetize_subscriber: Boolean,
   detailed_xp: [Float],
   level: Float
+  avatarUrl: String
 }
 
 type Query {
