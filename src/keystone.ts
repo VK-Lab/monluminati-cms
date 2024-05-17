@@ -54,11 +54,11 @@ export default withAuth(
       extendGraphqlSchema: extendGraphQLSchema,
       path: "/api/graphql",
       apolloConfig: {
-        // csrfPrevention: IS_DEV ? false : true
-      },
+        csrfPrevention: IS_DEV ? false : true
+      }, 
       playground: PLAYGROUND_GQL,
       schemaPath: "../schema.graphql"
-    },
+    }, 
       
     /** config */
     storage: {

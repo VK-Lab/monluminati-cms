@@ -178,7 +178,11 @@ export const lists: Lists = {
         links: true,
         dividers: true
       }),
-
+      shortDescription: text({
+        ui: {
+          displayMode: "textarea"
+        }
+      }),
       socialWeb: text(),
       socialX: text(),
       socialDiscord: text(),

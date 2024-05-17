@@ -51,6 +51,7 @@ model Project {
   banner_extension String?
   name             String       @default("")
   content          String       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  shortDescription String       @default("")
   socialWeb        String       @default("")
   socialX          String       @default("")
   socialDiscord    String       @default("")
