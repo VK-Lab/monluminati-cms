@@ -2,6 +2,7 @@ import { mergeSchemas } from "@graphql-tools/schema";
 import { mergeTypeDefs } from "@graphql-tools/merge";
 import type { GraphQLSchema } from "graphql";
 import { readFileSync } from "fs";
+import queryTopContributors from "./queries/queryTopContributors";
 import path from "path";
 
 const baseFolder = path.join(process.cwd(), "./src/extend-gql");
@@ -15,24 +16,7 @@ const extendGraphQLSchema = (schema: GraphQLSchema): GraphQLSchema => {
     typeDefs: mergeTypeDefs([extendSchemaTypes]),
     resolvers: {
       Query: {
-        topContributors: async () => {
-          try {
-            const response = await fetch(
-              "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?page=1"
-            );
-            const result = await response.json();
-            const transformedData = (result?.players ?? []).map(
-              (player: any) => ({
-                ...player,
-                avatarUrl: `https://cdn.discordapp.com/avatars/${player.id}/${player.avatar}.webp?size=128`
-              })
-            );
-
-            return transformedData;
-          } catch (error: any) {
-            return [];
-          }
-        }
+        topContributors: queryTopContributors,
       }
     }
   });
