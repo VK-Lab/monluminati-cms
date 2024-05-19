@@ -1,3 +1,6 @@
+/**
+ * Contributor
+ */
 type contributor {
   avatar: String,
   discriminator: String,
@@ -13,6 +16,22 @@ type contributor {
   avatarUrl: String
 }
 
+/**
+ * Telegram News
+ */
+type telegramNews {
+  title: String,
+  description: String,
+  url: String,
+  urlToImage: String,
+  publishedAt: String,
+  content: String
+}
+
+/**
+ * Query
+ */
 type Query {
   topContributors: [contributor]
+  recentNews: [telegramNews]
 }
