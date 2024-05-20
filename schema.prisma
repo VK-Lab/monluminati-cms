@@ -12,12 +12,16 @@ generator client {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String    @default("")
-  email     String    @unique @default("")
-  password  String
-  posts     Post[]    @relation("Post_author")
-  createdAt DateTime? @default(now())
+  id             String    @id @default(cuid())
+  username       String    @unique @default("")
+  name           String    @default("")
+  email          String    @default("")
+  discordId      String    @unique @default("")
+  password       String?
+  posts          Post[]    @relation("Post_author")
+  remainingVotes Int?      @default(0)
+  isAdmin        Boolean   @default(false)
+  createdAt      DateTime? @default(now())
 }
 
 model Post {

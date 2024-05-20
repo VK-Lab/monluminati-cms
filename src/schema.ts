@@ -17,6 +17,7 @@ import {
   password,
   timestamp,
   checkbox,
+  integer,
 } from "@keystone-6/core/fields";
 
 
@@ -40,20 +41,23 @@ export const lists: Lists = {
     fields: {
       // by adding isRequired, we enforce that every User should have a name
       //   if no name is provided, an error will be displayed
+      username: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
+
       name: text({ validation: { isRequired: true } }),
 
-      email: text({
-        validation: { isRequired: true },
-        // by adding isIndexed: 'unique', we're saying that no user can have the same
-        // email as another user - this may or may not be a good idea for your project
-        isIndexed: "unique"
-      }),
+      email: text(),
 
-      password: password({ validation: { isRequired: true } }),
+      discordId: text({ isIndexed: 'unique'}),
+
+      password: password(),
 
       // we can use this field to see what Posts this User has authored
       //   more on that in the Post list below
       posts: relationship({ ref: "Post.author", many: true }),
+
+      remainingVotes: integer({ defaultValue: 0 }),
+
+      isAdmin: checkbox({ defaultValue: false }),
 
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
@@ -98,8 +102,8 @@ export const lists: Lists = {
         // this is some customisations for changing how this will look in the AdminUI
         ui: {
           displayMode: "cards",
-          cardFields: ["name", "email"],
-          inlineEdit: { fields: ["name", "email"] },
+          cardFields: ["name"],
+          inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true
         },
@@ -210,7 +214,7 @@ export const lists: Lists = {
       categories: relationship({
         ref: "Category.categories",
         many: true,
- 
+
         ui: {
           displayMode: "cards",
           cardFields: ["name"],
