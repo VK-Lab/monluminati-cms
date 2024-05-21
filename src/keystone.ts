@@ -44,22 +44,31 @@ export default withAuth(
         schedule("0 0 * * 0", async () => {
           console.log("Start cron jobs to add available votes to users");
           const response = await fetch(
-            "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?limit=10&page=0",
+            "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?limit=50&page=0",
           );
           const result = await response.json();
-          const users = result.players;
+          const topUsers = result.players;
 
-          const existingUsers = await context.db.User.findMany({
-            where: {
-              discordId: {
-                in: users.map((user: { id: string }) => user.id),
-              },
-            },
-          });
+          const existingUsers = await context.db.User.findMany();
+          for (const existingUser of existingUsers) {
+            const isTop = topUsers.find(
+              (user: { id: string }) => user.id === existingUser.discordId,
+            );
+            if (!isTop) {
+              await context.db.User.updateOne({
+                where: {
+                  id: existingUser.id,
+                },
+                data: {
+                  remainingVotes: existingUser.remainingVotes! + 1,
+                },
+              });
+            }
+          }
 
-          for (let i = 0; i < users.length; i++) {
-            const user = users[i];
-            const addVotes = 10 - i;
+          for (let i = 0; i < topUsers.length; i++) {
+            const user = topUsers[i];
+            const addVotes = 50 - i;
             const existingUser = existingUsers.find(
               (u) => u.discordId === user.id,
             );
@@ -90,33 +99,48 @@ export default withAuth(
     session,
     server: {
       extendExpressApp: (app, context) => {
-        passport.use(new Strategy({
-          clientID: process.env.DISCORD_APP_ID!,
-          clientSecret: process.env.DISCORD_SECRET!,
-          callbackURL: process.env.DISCORD_REDIRECT_URL!,
-          scope: ['identify', 'email']
-        }, async (_accessToken, _refreshToken, profile, done) => {
-          let user = await context.db.User.findOne({ where: { discordId: profile.id } });
-          if (!user) {
-            user = await context.db.User.createOne({
-              data: {
-                discordId: profile.id,
-                username: profile.username,
-                name: profile.username,
-              },
-            });
-          }
-          return done(null, { id: user.id });
-        }));
+        passport.use(
+          new Strategy(
+            {
+              clientID: process.env.DISCORD_APP_ID!,
+              clientSecret: process.env.DISCORD_SECRET!,
+              callbackURL: process.env.DISCORD_REDIRECT_URL!,
+              scope: ["identify", "email"],
+            },
+            async (_accessToken, _refreshToken, profile, done) => {
+              let user = await context.db.User.findOne({
+                where: { discordId: profile.id },
+              });
+              if (!user) {
+                user = await context.db.User.createOne({
+                  data: {
+                    discordId: profile.id,
+                    username: profile.username,
+                    name: profile.username,
+                  },
+                });
+              }
+              return done(null, { id: user.id });
+            },
+          ),
+        );
 
         app.get("/api/auth/discord", passport.authenticate("discord"));
-        app.get("/api/auth/discord/redirect", passport.authenticate("discord", {
-          session: false,
-        }), async (req, res) => {
-          const user = req.user! as { id: string };
-          const sessionToken = await seal({ listKey: 'User', itemId: user.id }, process.env.SESSION_SECRET!, defaults)
-          res.json({sessionToken});
-        });
+        app.get(
+          "/api/auth/discord/redirect",
+          passport.authenticate("discord", {
+            session: false,
+          }),
+          async (req, res) => {
+            const user = req.user! as { id: string };
+            const sessionToken = await seal(
+              { listKey: "User", itemId: user.id },
+              process.env.SESSION_SECRET!,
+              defaults,
+            );
+            res.json({ sessionToken });
+          },
+        );
       },
       port: PORT,
       cors: IS_DEV
