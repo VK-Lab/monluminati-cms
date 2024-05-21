@@ -7,6 +7,7 @@
 
 import { list } from "@keystone-6/core";
 import { allowAll } from "@keystone-6/core/access";
+import type { Session } from "./auth";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -16,9 +17,8 @@ import {
   relationship,
   password,
   timestamp,
-  checkbox,
+  checkbox
 } from "@keystone-6/core/fields";
-
 
 // the document field is a more complicated field, so it has it's own package
 import { document } from "@keystone-6/fields-document";
@@ -27,6 +27,7 @@ import { document } from "@keystone-6/fields-document";
 // when using Typescript, you can refine your types to a stricter subset by importing
 // the generated types from '.keystone/types'
 import type { Lists } from ".keystone/types";
+import { New, Hashtag } from "./models";
 
 export const lists: Lists = {
   User: list({
@@ -53,12 +54,37 @@ export const lists: Lists = {
 
       // we can use this field to see what Posts this User has authored
       //   more on that in the Post list below
-      posts: relationship({ ref: "Post.author", many: true }),
+      posts: relationship({
+        ref: "Post.author",
+        many: true,
+        ui: { displayMode: "count" }
+      }),
+      news: relationship({
+        ref: "New.author",
+        many: true,
+        ui: {
+          hideCreate: true,
+          displayMode: "select"
+        }
+      }),
 
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
         defaultValue: { kind: "now" }
+      }),
+      isEditor: checkbox({
+        defaultValue: false,
+        ui: {
+          itemView: {
+            fieldPosition: "sidebar"
+          }
+        }
       })
+    },
+    ui: {
+      listView: {
+        initialColumns: ["name", "email", "isEditor"]
+      }
     }
   }),
 
@@ -210,7 +236,6 @@ export const lists: Lists = {
       categories: relationship({
         ref: "Category.categories",
         many: true,
- 
         ui: {
           displayMode: "cards",
           cardFields: ["name"],
@@ -245,6 +270,18 @@ export const lists: Lists = {
           }
         }
       })
+    },
+    ui: {
+      listView: {
+        initialColumns: [
+          "name",
+          "socialWeb",
+          "socialX",
+          "socialDiscord",
+          "isNative",
+          "isLeadingProject"
+        ]
+      }
     }
   }),
 
@@ -279,5 +316,8 @@ export const lists: Lists = {
       name: text(),
       categories: relationship({ ref: "Project.categories", many: true })
     }
-  })
+  }),
+
+  New: New,
+  Hashtag: Hashtag
 };
