@@ -1,17 +1,10 @@
-import {
-  image,
-  text,
-  relationship,
-  password,
-  timestamp,
-  checkbox
-} from "@keystone-6/core/fields";
+import { image, text, relationship, checkbox } from "@keystone-6/core/fields";
 import { list } from "@keystone-6/core";
 import { document } from "@keystone-6/fields-document";
+import isURL from "validator/lib/isURL";
 import type { Session } from "../auth";
 
 const isEditor = ({ session }: { session: Session }) => {
-  console.log(`🚀 ~ isEditor ~ session:`, session);
   return Boolean(session?.data.isEditor);
 };
 
@@ -53,7 +46,26 @@ const New = list({
         displayMode: "textarea"
       }
     }),
-    sourceUrl: text({}),
+    sourceUrl: text({
+      validation: { isRequired: true },
+      hooks: {
+        validateInput: async ({
+          resolvedData,
+          addValidationError,
+          fieldKey
+        }) => {
+          const url = resolvedData[fieldKey];
+          if (typeof url !== "string" || url.trim() === "") {
+            addValidationError("URL is required");
+            return;
+          }
+
+          if (isURL(url)) {
+            addValidationError(`Invalid URL: ${url}`);
+          }
+        }
+      }
+    }),
 
     // with this field, you can set a User as the author for a Post
     author: relationship({
