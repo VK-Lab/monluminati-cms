@@ -7,7 +7,6 @@
 
 import { list } from "@keystone-6/core";
 import { allowAll } from "@keystone-6/core/access";
-import type { Session } from "./auth";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
