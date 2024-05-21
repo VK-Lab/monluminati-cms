@@ -7,9 +7,11 @@
     "start": "keystone start",
     "build": "yarn && yarn keystone build && yarn keystone prisma migrate deploy",
     "postinstall": "keystone build --no-ui --frozen",
-    "seed-data": "tsx seed-data.ts"
+    "seed-data": "tsx ./seed-data/seed-data.ts"
   },
   "dependencies": {
+    "@graphql-tools/merge": "^9.0.4",
+    "@graphql-tools/schema": "^10.0.3",
     "@keystone-6/auth": "^8.0.0",
     "@keystone-6/core": "^6.1.0",
     "@keystone-6/fields-document": "^9.0.0",
