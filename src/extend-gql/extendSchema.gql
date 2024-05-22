@@ -30,3 +30,8 @@ type Query {
   topContributors: [contributor]
   recentNews: [telegramNews]
 }
+
+# Mutation
+type Mutation {
+  voteProject(id: ID): Project
+}

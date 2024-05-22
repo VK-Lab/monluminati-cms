@@ -65,6 +65,7 @@ model Project {
   isAnnounced      Boolean      @default(false)
   isNative         Boolean      @default(false)
   isLeadingProject Boolean      @default(false)
+  votes            Int?         @default(0)
 }
 
 model ProjectTag {

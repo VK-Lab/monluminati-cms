@@ -160,7 +160,14 @@ export const lists: Lists = {
     //   for this starter project, anyone can create, query, update and delete anything
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-    access: allowAll,
+    access: {
+      operation: {
+        query: allowAll,
+        create: ({session}) => Boolean(!!session),
+        update: ({session}) => Boolean(!!session),
+        delete: ({session}) => Boolean(!!session)
+      }
+    },
 
     // this is the fields for our Post list
     fields: {
@@ -248,7 +255,8 @@ export const lists: Lists = {
             fieldPosition: "sidebar"
           }
         }
-      })
+      }),
+      votes: integer({ defaultValue: 0 }),
     }
   }),
 
