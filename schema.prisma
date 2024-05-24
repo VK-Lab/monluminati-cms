@@ -17,7 +17,9 @@ model User {
   email     String    @unique @default("")
   password  String
   posts     Post[]    @relation("Post_author")
+  news      New[]     @relation("New_author")
   createdAt DateTime? @default(now())
+  isEditor  Boolean   @default(false)
 }
 
 model Post {
@@ -73,4 +75,30 @@ model Category {
   id         String    @id @default(cuid())
   name       String    @default("")
   categories Project[] @relation("Category_categories")
+}
+
+model New {
+  id                  String    @id @default(cuid())
+  title               String    @default("")
+  thumbnail_id        String?
+  thumbnail_filesize  Int?
+  thumbnail_width     Int?
+  thumbnail_height    Int?
+  thumbnail_extension String?
+  content             String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  isPublished         Boolean   @default(false)
+  description         String    @default("")
+  thumbnailUrl        String    @default("")
+  sourceUrl           String    @default("")
+  author              User?     @relation("New_author", fields: [authorId], references: [id])
+  authorId            String?   @map("author")
+  hashtags            Hashtag[] @relation("Hashtag_hashtags")
+
+  @@index([authorId])
+}
+
+model Hashtag {
+  id       String @id @default(cuid())
+  name     String @default("")
+  hashtags New[]  @relation("Hashtag_hashtags")
 }
