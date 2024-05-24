@@ -80,13 +80,13 @@ model Category {
 model New {
   id                  String    @id @default(cuid())
   title               String    @default("")
+  isPublished         Boolean   @default(false)
   thumbnail_id        String?
   thumbnail_filesize  Int?
   thumbnail_width     Int?
   thumbnail_height    Int?
   thumbnail_extension String?
   content             String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  isPublished         Boolean   @default(false)
   description         String    @default("")
   thumbnailUrl        String    @default("")
   sourceUrl           String    @default("")
