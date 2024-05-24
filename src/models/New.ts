@@ -1,7 +1,7 @@
 import { image, text, relationship, checkbox } from "@keystone-6/core/fields";
 import { list } from "@keystone-6/core";
 import { document } from "@keystone-6/fields-document";
-import isURL from "validator/lib/isURL";
+// import isURL from "validator/lib/isURL";
 import type { Session } from "../auth";
 import { allowAll } from "@keystone-6/core/access";
 
@@ -69,22 +69,14 @@ const New = list({
       }
     }),
 
-    // with this field, you can set a User as the author for a Post
     author: relationship({
-      // we could have used 'User', but then the relationship would only be 1-way
       ref: "User.news",
-
-      // this is some customisations for changing how this will look in the AdminUI
       ui: {
         displayMode: "cards",
         cardFields: ["name", "email"],
-        // inlineEdit: { fields: ["name", "email"] },
         linkToItem: true,
         inlineConnect: true
       },
-
-      // a Post can only have one author
-      //   this is the default, but we show it here for verbosity
       many: false
     }),
 
