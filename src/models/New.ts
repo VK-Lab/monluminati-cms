@@ -21,6 +21,14 @@ const New = list({
   // this is the fields for our Post list
   fields: {
     title: text({ validation: { isRequired: true } }),
+    isPublished: checkbox({
+      defaultValue: false,
+      ui: {
+        itemView: {
+          fieldPosition: "sidebar"
+        }
+      }
+    }),
     thumbnail: image({ storage: "my_s3_files" }),
     content: document({
       formatting: true,
@@ -33,14 +41,6 @@ const New = list({
       ],
       links: true,
       dividers: true
-    }),
-    isPublished: checkbox({
-      defaultValue: false,
-      ui: {
-        itemView: {
-          fieldPosition: "sidebar"
-        }
-      }
     }),
     description: text({
       ui: {
@@ -97,7 +97,6 @@ const New = list({
     isHidden: false,
     listView: {
       initialColumns: [
-        "thumbnail",
         "title",
         "author",
         "isPublished",
