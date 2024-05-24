@@ -3,6 +3,7 @@ import { list } from "@keystone-6/core";
 import { document } from "@keystone-6/fields-document";
 import isURL from "validator/lib/isURL";
 import type { Session } from "../auth";
+import { allowAll } from "@keystone-6/core/access";
 
 const isEditor = ({ session }: { session: Session }) => {
   return Boolean(session?.data.isEditor);
@@ -11,7 +12,7 @@ const isEditor = ({ session }: { session: Session }) => {
 const New = list({
   access: {
     operation: {
-      query: isEditor,
+      query: allowAll,
       create: isEditor,
       update: isEditor,
       delete: isEditor
@@ -46,6 +47,7 @@ const New = list({
         displayMode: "textarea"
       }
     }),
+    thumbnailUrl: text(),
     sourceUrl: text({
       validation: { isRequired: true },
       hooks: {
@@ -60,9 +62,9 @@ const New = list({
             return;
           }
 
-          if (isURL(url)) {
-            addValidationError(`Invalid URL: ${url}`);
-          }
+          // if (isURL(url)) {
+          //   addValidationError(`Invalid URL: ${url}`);
+          // }
         }
       }
     }),

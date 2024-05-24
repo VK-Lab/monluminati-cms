@@ -88,6 +88,7 @@ model New {
   content             String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   isPublished         Boolean   @default(false)
   description         String    @default("")
+  thumbnailUrl        String    @default("")
   sourceUrl           String    @default("")
   author              User?     @relation("New_author", fields: [authorId], references: [id])
   authorId            String?   @map("author")
