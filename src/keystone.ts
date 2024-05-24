@@ -49,22 +49,26 @@ export default withAuth(
           const result = await response.json();
           const topUsers = result.players;
 
-          const existingUsers = await context.db.User.findMany();
-          for (const existingUser of existingUsers) {
-            const isTop = topUsers.find(
-              (user: { id: string }) => user.id === existingUser.discordId,
-            );
-            if (!isTop) {
-              await context.db.User.updateOne({
-                where: {
-                  id: existingUser.id,
-                },
-                data: {
-                  remainingVotes: existingUser.remainingVotes! + 1,
-                },
-              });
-            }
-          }
+          const existingUsers = await context.db.User.findMany({
+            where: { isAdmin: { equals: false } },
+          });
+          let usersToCreate = [];
+          let usersToUpdate = existingUsers
+            .filter(
+              (existingUser) =>
+                !topUsers.find(
+                  (topUser: { id: string }) =>
+                    topUser.id === existingUser.discordId,
+                ),
+            )
+            .map((existingUser: { id: any; remainingVotes: any }) => ({
+              where: {
+                id: existingUser.id,
+              },
+              data: {
+                remainingVotes: existingUser.remainingVotes! + 1,
+              },
+            }));
 
           for (let i = 0; i < topUsers.length; i++) {
             const user = topUsers[i];
@@ -73,7 +77,7 @@ export default withAuth(
               (u) => u.discordId === user.id,
             );
             if (existingUser) {
-              await context.db.User.updateOne({
+              usersToUpdate.push({
                 where: {
                   id: existingUser.id,
                 },
@@ -82,16 +86,17 @@ export default withAuth(
                 },
               });
             } else {
-              await context.db.User.createOne({
-                data: {
-                  discordId: user.id,
-                  username: user.username,
-                  name: user.username,
-                  remainingVotes: addVotes,
-                },
+              usersToCreate.push({
+                discordId: user.id,
+                username: user.username,
+                name: user.username,
+                remainingVotes: addVotes,
               });
             }
           }
+
+          await context.db.User.createMany({ data: usersToCreate });
+          await context.db.User.updateMany({ data: usersToUpdate });
         });
       },
     },
