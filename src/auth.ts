@@ -33,7 +33,7 @@ const { withAuth } = createAuth({
   // this is a GraphQL query fragment for fetching what data will be attached to a context.session
   //   this can be helpful for when you are writing your access control functions
   //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-  sessionData: 'username discordId isAdmin isEditor',
+  sessionData: 'username discordId isAdmin',
   secretField: 'password',
 
   // WARNING: remove initFirstItem functionality in production
@@ -62,9 +62,9 @@ const session = statelessSessions({
 
 export type Session = {
   data: {
-    name: string;
-    createdAt: string;
-    isEditor: boolean;
+    username: string;
+    discordId: string;
+    isAdmin: boolean;
   }
 };
 

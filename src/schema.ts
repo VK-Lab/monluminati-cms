@@ -66,16 +66,12 @@ export const lists: Lists = {
           displayMode: "select"
         }
       }),
-
       remainingVotes: integer({ defaultValue: 0 }),
-
-      isAdmin: checkbox({ defaultValue: false }),
-
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
         defaultValue: { kind: "now" }
       }),
-      isEditor: checkbox({
+      isAdmin: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
@@ -86,7 +82,7 @@ export const lists: Lists = {
     },
     ui: {
       listView: {
-        initialColumns: ["name", "email", "isEditor"]
+        initialColumns: ["name", "email", "isAdmin"]
       }
     }
   }),
