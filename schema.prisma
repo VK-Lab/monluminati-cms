@@ -19,9 +19,10 @@ model User {
   discordId      String    @unique @default("")
   password       String?
   posts          Post[]    @relation("Post_author")
+  news           New[]     @relation("New_author")
   remainingVotes Int?      @default(0)
-  isAdmin        Boolean   @default(false)
   createdAt      DateTime? @default(now())
+  isAdmin        Boolean   @default(false)
 }
 
 model Post {
@@ -78,4 +79,30 @@ model Category {
   id         String    @id @default(cuid())
   name       String    @default("")
   categories Project[] @relation("Category_categories")
+}
+
+model New {
+  id                  String    @id @default(cuid())
+  title               String    @default("")
+  isPublished         Boolean   @default(false)
+  thumbnail_id        String?
+  thumbnail_filesize  Int?
+  thumbnail_width     Int?
+  thumbnail_height    Int?
+  thumbnail_extension String?
+  content             String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  description         String    @default("")
+  thumbnailUrl        String    @default("")
+  sourceUrl           String    @default("")
+  author              User?     @relation("New_author", fields: [authorId], references: [id])
+  authorId            String?   @map("author")
+  hashtags            Hashtag[] @relation("Hashtag_hashtags")
+
+  @@index([authorId])
+}
+
+model Hashtag {
+  id       String @id @default(cuid())
+  name     String @default("")
+  hashtags New[]  @relation("Hashtag_hashtags")
 }
