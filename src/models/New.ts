@@ -50,23 +50,6 @@ const New = list({
     thumbnailUrl: text(),
     sourceUrl: text({
       validation: { isRequired: true },
-      hooks: {
-        validateInput: async ({
-          resolvedData,
-          addValidationError,
-          fieldKey
-        }) => {
-          const url = resolvedData[fieldKey];
-          if (typeof url !== "string" || url.trim() === "") {
-            addValidationError("URL is required");
-            return;
-          }
-
-          // if (isURL(url)) {
-          //   addValidationError(`Invalid URL: ${url}`);
-          // }
-        }
-      }
     }),
 
     author: relationship({
