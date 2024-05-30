@@ -143,7 +143,8 @@ export default withAuth(
               process.env.SESSION_SECRET!,
               defaults,
             );
-            res.json({ sessionToken });
+            res.cookie("keystonejs-session", sessionToken);
+            res.redirect("http://localhost:3000");
           },
         );
       },
