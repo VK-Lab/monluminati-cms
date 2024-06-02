@@ -29,6 +29,7 @@ type telegramNews {
 type Query {
   topContributors: [contributor]
   recentNews: [telegramNews]
+  me: User
 }
 
 # Mutation
