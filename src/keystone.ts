@@ -116,13 +116,24 @@ export default withAuth(
               let user = await context.db.User.findOne({
                 where: { discordId: profile.id },
               });
+              let discordAvatar;
+              if (profile.avatar) {
+                const format = profile.avatar.startsWith("a_") ? "gif" : "png";
+                discordAvatar = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
+              }
               if (!user) {
                 user = await context.db.User.createOne({
                   data: {
                     discordId: profile.id,
                     username: profile.username,
-                    name: profile.username,
+                    name: profile.global_name,
+                    discordAvatar,
                   },
+                });
+              } else {
+                user = await context.db.User.updateOne({
+                  where: { id: user.id },
+                  data: { name: profile.global_name, discordAvatar },
                 });
               }
               return done(null, { id: user.id });
