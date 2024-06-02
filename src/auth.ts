@@ -15,11 +15,11 @@
 // If you want to learn more about how our out-of-the-box authentication works, please
 // read https://keystonejs.com/docs/apis/auth#authentication-api
 
-import { createAuth } from '@keystone-6/auth';
+import { createAuth } from "@keystone-6/auth";
 import "dotenv/config";
 
 // see https://keystonejs.com/docs/apis/session for the session docs
-import { statelessSessions } from '@keystone-6/core/session';
+import { statelessSessions } from "@keystone-6/core/session";
 
 // for a stateless session, a SESSION_SECRET should always be provided
 //   especially in production (statelessSessions will throw if SESSION_SECRET is undefined)
@@ -27,14 +27,14 @@ let sessionSecret = process.env.SESSION_SECRET;
 
 // withAuth is a function we can use to wrap our base configuration
 const { withAuth } = createAuth({
-  listKey: 'User',
-  identityField: 'username',
+  listKey: "User",
+  identityField: "username",
 
   // this is a GraphQL query fragment for fetching what data will be attached to a context.session
   //   this can be helpful for when you are writing your access control functions
   //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-  sessionData: 'username discordId isAdmin',
-  secretField: 'password',
+  sessionData: "username discordId isAdmin",
+  secretField: "password",
 
   // WARNING: remove initFirstItem functionality in production
   //   see https://keystonejs.com/docs/config/auth#init-first-item for more
@@ -42,7 +42,7 @@ const { withAuth } = createAuth({
     // if there are no items in the database, by configuring this field
     //   you are asking the Keystone AdminUI to create a new user
     //   providing inputs for these fields
-    fields: ['username', 'name', 'password', "isAdmin"],
+    fields: ["username", "name", "password", "isAdmin"],
 
     // it uses context.sudo() to do this, which bypasses any access control you might have
     //   you shouldn't use this in production
@@ -65,7 +65,7 @@ export type Session = {
     username: string;
     discordId: string;
     isAdmin: boolean;
-  }
+  };
 };
 
 export { withAuth, session };

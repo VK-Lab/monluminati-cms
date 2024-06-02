@@ -155,17 +155,24 @@ export default withAuth(
               defaults,
             );
             res.cookie("keystonejs-session", sessionToken);
-            res.redirect("http://localhost:3000");
+            res.redirect(clientOrigin);
           },
         );
+        app.post("/api/auth/logout", async (req, res) => {
+          await context.sessionStrategy?.end({ context });
+
+          res.clearCookie("keystonejs-session");
+          res.json({ status: "ok" });
+        });
       },
       port: PORT,
       cors: IS_DEV
         ? {
-            origin: "*",
+            origin: [clientOrigin],
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
             preflightContinue: false,
-            optionsSuccessStatus: 204,
+            optionsSuccessStatus: 200,
+            credentials: true,
           }
         : {
             origin: [clientOrigin],
