@@ -122,12 +122,27 @@ export default withAuth(
                 discordAvatar = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
               }
               if (!user) {
+                // Get initial votes
+                const response = await fetch(
+                  "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?limit=50&page=0",
+                );
+                const result = await response.json();
+                const topUsers = result.players;
+                const top = topUsers.findIndex(
+                  (topUser: { id: string }) => topUser.id === profile.id,
+                );
+                let remainingVotes = 1;
+                if (top > -1) {
+                  remainingVotes = 50 - top;
+                }
+
                 user = await context.db.User.createOne({
                   data: {
                     discordId: profile.id,
                     username: profile.username,
                     name: profile.global_name,
                     discordAvatar,
+                    remainingVotes,
                   },
                 });
               } else {
