@@ -116,13 +116,39 @@ export default withAuth(
               let user = await context.db.User.findOne({
                 where: { discordId: profile.id },
               });
+              let discordAvatar;
+              if (profile.avatar) {
+                const format = profile.avatar.startsWith("a_") ? "gif" : "png";
+                discordAvatar = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
+              }
               if (!user) {
+                // Get initial votes
+                const response = await fetch(
+                  "https://mee6.xyz/api/plugins/levels/leaderboard/1036357772826120242?limit=50&page=0",
+                );
+                const result = await response.json();
+                const topUsers = result.players;
+                const top = topUsers.findIndex(
+                  (topUser: { id: string }) => topUser.id === profile.id,
+                );
+                let remainingVotes = 1;
+                if (top > -1) {
+                  remainingVotes = 50 - top;
+                }
+
                 user = await context.db.User.createOne({
                   data: {
                     discordId: profile.id,
                     username: profile.username,
-                    name: profile.username,
+                    name: profile.global_name,
+                    discordAvatar,
+                    remainingVotes,
                   },
+                });
+              } else {
+                user = await context.db.User.updateOne({
+                  where: { id: user.id },
+                  data: { name: profile.global_name, discordAvatar },
                 });
               }
               return done(null, { id: user.id });
@@ -143,17 +169,25 @@ export default withAuth(
               process.env.SESSION_SECRET!,
               defaults,
             );
-            res.json({ sessionToken });
+            res.cookie("keystonejs-session", sessionToken);
+            res.redirect(clientOrigin);
           },
         );
+        app.post("/api/auth/logout", async (req, res) => {
+          await context.sessionStrategy?.end({ context });
+
+          res.clearCookie("keystonejs-session");
+          res.json({ status: "ok" });
+        });
       },
       port: PORT,
       cors: IS_DEV
         ? {
-            origin: "*",
+            origin: [clientOrigin],
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
             preflightContinue: false,
-            optionsSuccessStatus: 204,
+            optionsSuccessStatus: 200,
+            credentials: true,
           }
         : {
             origin: [clientOrigin],

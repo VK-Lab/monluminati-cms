@@ -41,13 +41,15 @@ export const lists: Lists = {
     fields: {
       // by adding isRequired, we enforce that every User should have a name
       //   if no name is provided, an error will be displayed
-      username: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
+      username: text({ validation: { isRequired: true }, isIndexed: "unique" }),
 
       name: text({ validation: { isRequired: true } }),
 
       email: text(),
 
-      discordId: text({ isIndexed: 'unique'}),
+      discordId: text({ isIndexed: "unique" }),
+
+      discordAvatar: text(),
 
       password: password(),
 
@@ -56,35 +58,35 @@ export const lists: Lists = {
       posts: relationship({
         ref: "Post.author",
         many: true,
-        ui: { displayMode: "count" }
+        ui: { displayMode: "count" },
       }),
       news: relationship({
         ref: "New.author",
         many: true,
         ui: {
           hideCreate: true,
-          displayMode: "select"
-        }
+          displayMode: "select",
+        },
       }),
       remainingVotes: integer({ defaultValue: 0 }),
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
-        defaultValue: { kind: "now" }
+        defaultValue: { kind: "now" },
       }),
       isAdmin: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
-      })
+            fieldPosition: "sidebar",
+          },
+        },
+      }),
     },
     ui: {
       listView: {
-        initialColumns: ["name", "email", "isAdmin"]
-      }
-    }
+        initialColumns: ["name", "email", "isAdmin"],
+      },
+    },
   }),
 
   Post: list({
@@ -94,7 +96,7 @@ export const lists: Lists = {
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
     ui: {
-      isHidden: false
+      isHidden: false,
     },
     // this is the fields for our Post list
     fields: {
@@ -109,10 +111,10 @@ export const lists: Lists = {
           [1, 1, 1],
           [2, 1],
           [1, 2],
-          [1, 2, 1]
+          [1, 2, 1],
         ],
         links: true,
-        dividers: true
+        dividers: true,
       }),
 
       // with this field, you can set a User as the author for a Post
@@ -126,12 +128,12 @@ export const lists: Lists = {
           cardFields: ["name"],
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
-          inlineConnect: true
+          inlineConnect: true,
         },
 
         // a Post can only have one author
         //   this is the default, but we show it here for verbosity
-        many: false
+        many: false,
       }),
 
       // with this field, you can add some Tags to Posts
@@ -149,10 +151,10 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
-      })
-    }
+          inlineCreate: { fields: ["name"] },
+        },
+      }),
+    },
   }),
 
   // this last list is our Tag list, it only has a name field for now
@@ -165,15 +167,15 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     // this is the fields for our Tag list
     fields: {
       name: text(),
       // this can be helpful to find out all the Posts associated with a Tag
-      posts: relationship({ ref: "Post.tags", many: true })
-    }
+      posts: relationship({ ref: "Post.tags", many: true }),
+    },
   }),
 
   Project: list({
@@ -184,10 +186,10 @@ export const lists: Lists = {
     access: {
       operation: {
         query: allowAll,
-        create: ({session}) => Boolean(!!session),
-        update: ({session}) => Boolean(!!session),
-        delete: ({session}) => Boolean(!!session)
-      }
+        create: ({ session }) => Boolean(!!session),
+        update: ({ session }) => Boolean(!!session),
+        delete: ({ session }) => Boolean(!!session),
+      },
     },
 
     // this is the fields for our Post list
@@ -205,15 +207,15 @@ export const lists: Lists = {
           [1, 1, 1],
           [2, 1],
           [1, 2],
-          [1, 2, 1]
+          [1, 2, 1],
         ],
         links: true,
-        dividers: true
+        dividers: true,
       }),
       shortDescription: text({
         ui: {
-          displayMode: "textarea"
-        }
+          displayMode: "textarea",
+        },
       }),
       socialWeb: text(),
       socialX: text(),
@@ -235,8 +237,8 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
+          inlineCreate: { fields: ["name"] },
+        },
       }),
 
       categories: relationship({
@@ -248,33 +250,33 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
+          inlineCreate: { fields: ["name"] },
+        },
       }),
 
       isAnnounced: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
+            fieldPosition: "sidebar",
+          },
+        },
       }),
       isNative: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
+            fieldPosition: "sidebar",
+          },
+        },
       }),
       isLeadingProject: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
+            fieldPosition: "sidebar",
+          },
+        },
       }),
       votes: integer({ defaultValue: 0 }),
     },
@@ -286,10 +288,10 @@ export const lists: Lists = {
           "socialX",
           "socialDiscord",
           "isNative",
-          "isLeadingProject"
-        ]
-      }
-    }
+          "isLeadingProject",
+        ],
+      },
+    },
   }),
 
   // this last list is our Tag list, it only has a name field for now
@@ -302,29 +304,29 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     // this is the fields for our Tag list
     fields: {
       name: text(),
       // this can be helpful to find out all the Projects associated with a Tag
-      tags: relationship({ ref: "Project.tags", many: true })
-    }
+      tags: relationship({ ref: "Project.tags", many: true }),
+    },
   }),
 
   Category: list({
     access: allowAll,
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     fields: {
       name: text(),
-      categories: relationship({ ref: "Project.categories", many: true })
-    }
+      categories: relationship({ ref: "Project.categories", many: true }),
+    },
   }),
 
   New: New,
-  Hashtag: Hashtag
+  Hashtag: Hashtag,
 };

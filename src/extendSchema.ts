@@ -5,6 +5,7 @@ import { readFileSync } from "fs";
 import queryTopContributors from "./queries/queryTopContributors";
 import path from "path";
 import voteProject from "./mutations/voteProject";
+import queryMe from "./queries/queryMe";
 
 const baseFolder = path.join(process.cwd(), "./src/extend-gql");
 const extendSchemaTypes = [
@@ -18,11 +19,12 @@ const extendGraphQLSchema = (schema: GraphQLSchema): GraphQLSchema =>
     resolvers: {
       Query: {
         topContributors: queryTopContributors,
+        me: queryMe,
       },
       Mutation: {
         voteProject,
       },
-    }
+    },
   });
 
 export default extendGraphQLSchema;
