@@ -16,7 +16,8 @@ import {
   relationship,
   password,
   timestamp,
-  checkbox
+  checkbox,
+  integer,
 } from "@keystone-6/core/fields";
 
 // the document field is a more complicated field, so it has it's own package
@@ -40,51 +41,52 @@ export const lists: Lists = {
     fields: {
       // by adding isRequired, we enforce that every User should have a name
       //   if no name is provided, an error will be displayed
+      username: text({ validation: { isRequired: true }, isIndexed: "unique" }),
+
       name: text({ validation: { isRequired: true } }),
 
-      email: text({
-        validation: { isRequired: true },
-        // by adding isIndexed: 'unique', we're saying that no user can have the same
-        // email as another user - this may or may not be a good idea for your project
-        isIndexed: "unique"
-      }),
+      email: text(),
 
-      password: password({ validation: { isRequired: true } }),
+      discordId: text({ isIndexed: "unique" }),
+
+      discordAvatar: text(),
+
+      password: password(),
 
       // we can use this field to see what Posts this User has authored
       //   more on that in the Post list below
       posts: relationship({
         ref: "Post.author",
         many: true,
-        ui: { displayMode: "count" }
+        ui: { displayMode: "count" },
       }),
       news: relationship({
         ref: "New.author",
         many: true,
         ui: {
           hideCreate: true,
-          displayMode: "select"
-        }
+          displayMode: "select",
+        },
       }),
-
+      remainingVotes: integer({ defaultValue: 0 }),
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
-        defaultValue: { kind: "now" }
+        defaultValue: { kind: "now" },
       }),
-      isEditor: checkbox({
+      isAdmin: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
-      })
+            fieldPosition: "sidebar",
+          },
+        },
+      }),
     },
     ui: {
       listView: {
-        initialColumns: ["name", "email", "isEditor"]
-      }
-    }
+        initialColumns: ["name", "email", "isAdmin"],
+      },
+    },
   }),
 
   Post: list({
@@ -94,7 +96,7 @@ export const lists: Lists = {
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
     access: allowAll,
     ui: {
-      isHidden: false
+      isHidden: false,
     },
     // this is the fields for our Post list
     fields: {
@@ -109,10 +111,10 @@ export const lists: Lists = {
           [1, 1, 1],
           [2, 1],
           [1, 2],
-          [1, 2, 1]
+          [1, 2, 1],
         ],
         links: true,
-        dividers: true
+        dividers: true,
       }),
 
       // with this field, you can set a User as the author for a Post
@@ -123,15 +125,15 @@ export const lists: Lists = {
         // this is some customisations for changing how this will look in the AdminUI
         ui: {
           displayMode: "cards",
-          cardFields: ["name", "email"],
-          inlineEdit: { fields: ["name", "email"] },
+          cardFields: ["name"],
+          inlineEdit: { fields: ["name"] },
           linkToItem: true,
-          inlineConnect: true
+          inlineConnect: true,
         },
 
         // a Post can only have one author
         //   this is the default, but we show it here for verbosity
-        many: false
+        many: false,
       }),
 
       // with this field, you can add some Tags to Posts
@@ -149,10 +151,10 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
-      })
-    }
+          inlineCreate: { fields: ["name"] },
+        },
+      }),
+    },
   }),
 
   // this last list is our Tag list, it only has a name field for now
@@ -165,15 +167,15 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     // this is the fields for our Tag list
     fields: {
       name: text(),
       // this can be helpful to find out all the Posts associated with a Tag
-      posts: relationship({ ref: "Post.tags", many: true })
-    }
+      posts: relationship({ ref: "Post.tags", many: true }),
+    },
   }),
 
   Project: list({
@@ -181,7 +183,14 @@ export const lists: Lists = {
     //   for this starter project, anyone can create, query, update and delete anything
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-    access: allowAll,
+    access: {
+      operation: {
+        query: allowAll,
+        create: ({ session }) => Boolean(!!session),
+        update: ({ session }) => Boolean(!!session),
+        delete: ({ session }) => Boolean(!!session),
+      },
+    },
 
     // this is the fields for our Post list
     fields: {
@@ -198,15 +207,15 @@ export const lists: Lists = {
           [1, 1, 1],
           [2, 1],
           [1, 2],
-          [1, 2, 1]
+          [1, 2, 1],
         ],
         links: true,
-        dividers: true
+        dividers: true,
       }),
       shortDescription: text({
         ui: {
-          displayMode: "textarea"
-        }
+          displayMode: "textarea",
+        },
       }),
       socialWeb: text(),
       socialX: text(),
@@ -228,8 +237,8 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
+          inlineCreate: { fields: ["name"] },
+        },
       }),
 
       categories: relationship({
@@ -241,34 +250,35 @@ export const lists: Lists = {
           inlineEdit: { fields: ["name"] },
           linkToItem: true,
           inlineConnect: true,
-          inlineCreate: { fields: ["name"] }
-        }
+          inlineCreate: { fields: ["name"] },
+        },
       }),
 
       isAnnounced: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
+            fieldPosition: "sidebar",
+          },
+        },
       }),
       isNative: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
+            fieldPosition: "sidebar",
+          },
+        },
       }),
       isLeadingProject: checkbox({
         defaultValue: false,
         ui: {
           itemView: {
-            fieldPosition: "sidebar"
-          }
-        }
-      })
+            fieldPosition: "sidebar",
+          },
+        },
+      }),
+      votes: integer({ defaultValue: 0 }),
     },
     ui: {
       listView: {
@@ -278,10 +288,10 @@ export const lists: Lists = {
           "socialX",
           "socialDiscord",
           "isNative",
-          "isLeadingProject"
-        ]
-      }
-    }
+          "isLeadingProject",
+        ],
+      },
+    },
   }),
 
   // this last list is our Tag list, it only has a name field for now
@@ -294,29 +304,29 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     // this is the fields for our Tag list
     fields: {
       name: text(),
       // this can be helpful to find out all the Projects associated with a Tag
-      tags: relationship({ ref: "Project.tags", many: true })
-    }
+      tags: relationship({ ref: "Project.tags", many: true }),
+    },
   }),
 
   Category: list({
     access: allowAll,
     ui: {
-      isHidden: false
+      isHidden: false,
     },
 
     fields: {
       name: text(),
-      categories: relationship({ ref: "Project.categories", many: true })
-    }
+      categories: relationship({ ref: "Project.categories", many: true }),
+    },
   }),
 
   New: New,
-  Hashtag: Hashtag
+  Hashtag: Hashtag,
 };

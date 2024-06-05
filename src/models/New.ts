@@ -5,17 +5,17 @@ import { document } from "@keystone-6/fields-document";
 import type { Session } from "../auth";
 import { allowAll } from "@keystone-6/core/access";
 
-const isEditor = ({ session }: { session: Session }) => {
-  return Boolean(session?.data.isEditor);
+const isAdmin = ({ session }: { session: Session }) => {
+  return Boolean(session?.data.isAdmin);
 };
 
 const New = list({
   access: {
     operation: {
       query: allowAll,
-      create: isEditor,
-      update: isEditor,
-      delete: isEditor
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin
     }
   },
   // this is the fields for our Post list

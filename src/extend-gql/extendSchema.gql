@@ -1,27 +1,26 @@
 # Contributor
 type contributor {
-  avatar: String,
-  discriminator: String,
-  guild_id: String,
-  id: String,
-  message_count: Float,
-  monetize_xp_boost: Float,
-  username: String,
-  xp: Float,
-  is_monetize_subscriber: Boolean,
-  detailed_xp: [Float],
+  avatar: String
+  discriminator: String
+  guild_id: String
+  id: String
+  message_count: Float
+  monetize_xp_boost: Float
+  username: String
+  xp: Float
+  is_monetize_subscriber: Boolean
+  detailed_xp: [Float]
   level: Float
   avatarUrl: String
 }
 
-
 # Telegram News
 type telegramNews {
-  title: String,
-  description: String,
-  url: String,
-  urlToImage: String,
-  publishedAt: String,
+  title: String
+  description: String
+  url: String
+  urlToImage: String
+  publishedAt: String
   content: String
 }
 
@@ -29,4 +28,10 @@ type telegramNews {
 type Query {
   topContributors: [contributor]
   recentNews: [telegramNews]
+  me: User
+}
+
+# Mutation
+type Mutation {
+  voteProject(id: ID): Project
 }
