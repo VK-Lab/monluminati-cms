@@ -16,7 +16,7 @@ model User {
   username       String    @unique @default("")
   name           String    @default("")
   email          String    @default("")
-  discordId      String    @unique @default("")
+  discordId      String    @default("")
   discordAvatar  String    @default("")
   password       String?
   posts          Post[]    @relation("Post_author")

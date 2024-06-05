@@ -47,7 +47,7 @@ export const lists: Lists = {
 
       email: text(),
 
-      discordId: text({ isIndexed: "unique" }),
+      discordId: text(),
 
       discordAvatar: text(),
 
