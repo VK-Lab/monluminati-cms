@@ -12,14 +12,18 @@ generator client {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String    @default("")
-  email     String    @unique @default("")
-  password  String
-  posts     Post[]    @relation("Post_author")
-  news      New[]     @relation("New_author")
-  createdAt DateTime? @default(now())
-  isEditor  Boolean   @default(false)
+  id             String    @id @default(cuid())
+  username       String    @unique @default("")
+  name           String    @default("")
+  email          String    @default("")
+  discordId      String    @unique @default("")
+  discordAvatar  String    @default("")
+  password       String?
+  posts          Post[]    @relation("Post_author")
+  news           New[]     @relation("New_author")
+  remainingVotes Int?      @default(0)
+  createdAt      DateTime? @default(now())
+  isAdmin        Boolean   @default(false)
 }
 
 model Post {
@@ -63,6 +67,7 @@ model Project {
   isAnnounced      Boolean      @default(false)
   isNative         Boolean      @default(false)
   isLeadingProject Boolean      @default(false)
+  votes            Int?         @default(0)
 }
 
 model ProjectTag {
