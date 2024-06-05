@@ -113,9 +113,11 @@ export default withAuth(
               scope: ["identify", "email"],
             },
             async (_accessToken, _refreshToken, profile, done) => {
-              let user = await context.db.User.findOne({
-                where: { discordId: profile.id },
-              });
+              let user = (
+                await context.db.User.findMany({
+                  where: { discordId: { equals: profile.id } },
+                })
+              )[0];
               let discordAvatar;
               if (profile.avatar) {
                 const format = profile.avatar.startsWith("a_") ? "gif" : "png";
