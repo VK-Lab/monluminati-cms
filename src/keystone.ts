@@ -183,17 +183,13 @@ export default withAuth(
         });
       },
       port: PORT,
-      cors: IS_DEV
-        ? {
-            origin: [clientOrigin],
-            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            preflightContinue: false,
-            optionsSuccessStatus: 200,
-            credentials: true,
-          }
-        : {
-            origin: [clientOrigin],
-          },
+      cors: {
+        origin: [clientOrigin],
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+        optionsSuccessStatus: 200,
+        credentials: true,
+      },
     },
     graphql: {
       extendGraphqlSchema: extendGraphQLSchema,
