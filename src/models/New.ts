@@ -1,13 +1,10 @@
 import { image, text, relationship, checkbox } from "@keystone-6/core/fields";
 import { list } from "@keystone-6/core";
 import { document } from "@keystone-6/fields-document";
-// import isURL from "validator/lib/isURL";
-import type { Session } from "../auth";
 import { allowAll } from "@keystone-6/core/access";
+import {BaseAccessArgs} from "@keystone-6/core/dist/declarations/src/types/config/access-control";
 
-const isAdmin = ({ session }: { session: Session }) => {
-  return Boolean(session?.data.isAdmin);
-};
+const isAdmin = (args: BaseAccessArgs<any>) => Boolean(args.session?.data.isAdmin)
 
 const New = list({
   access: {
