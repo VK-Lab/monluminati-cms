@@ -16,7 +16,7 @@ const isAdmin = (args: BaseAccessArgs<any>) =>
 export default list({
   access: {
     operation: {
-      query: isAdmin,
+      query: allowAll,
       create: isAdmin,
       update: isAdmin,
       delete: isAdmin,

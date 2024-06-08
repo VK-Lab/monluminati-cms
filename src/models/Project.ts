@@ -1,16 +1,19 @@
-import {text, relationship, image, checkbox, integer} from "@keystone-6/core/fields";
+import {
+  text,
+  relationship,
+  image,
+  checkbox,
+  integer,
+} from "@keystone-6/core/fields";
 import { list } from "@keystone-6/core";
 import { allowAll } from "@keystone-6/core/access";
-import {BaseAccessArgs} from "@keystone-6/core/dist/declarations/src/types/config/access-control";
-import {document} from "@keystone-6/fields-document";
+import { BaseAccessArgs } from "@keystone-6/core/dist/declarations/src/types/config/access-control";
+import { document } from "@keystone-6/fields-document";
 
-const isAdmin = (args: BaseAccessArgs<any>) => Boolean(args.session?.data.isAdmin)
+const isAdmin = (args: BaseAccessArgs<any>) =>
+  Boolean(args.session?.data.isAdmin);
 
 export default list({
-  // WARNING
-  //   for this starter project, anyone can create, query, update and delete anything
-  //   if you want to prevent random people on the internet from accessing your data,
-  //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
   access: {
     operation: {
       query: allowAll,
