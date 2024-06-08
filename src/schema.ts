@@ -8,9 +8,16 @@
 // when using Typescript, you can refine your types to a stricter subset by importing
 // the generated types from '.keystone/types'
 import type { Lists } from ".keystone/types";
-import {New, Hashtag, Category, Project, ProjectTag, Post} from "./models";
-import Tag from "./models/Tag";
-import User from "./models/User";
+import {
+  New,
+  Hashtag,
+  Category,
+  Project,
+  ProjectTag,
+  Post,
+  Tag,
+  User,
+} from "./models";
 
 export const lists: Lists = {
   User,
