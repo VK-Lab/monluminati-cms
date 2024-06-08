@@ -1,9 +1,9 @@
 import { text, relationship } from "@keystone-6/core/fields";
-import { allowAll } from "@keystone-6/core/access";
 import { list } from "@keystone-6/core";
+import { allowAll } from "@keystone-6/core/access";
 import { isAdmin } from "./utils";
 
-const Hashtag = list({
+export default list({
   access: {
     operation: {
       query: allowAll,
@@ -12,14 +12,12 @@ const Hashtag = list({
       delete: isAdmin,
     },
   },
-
   ui: {
-    isHidden: true,
+    isHidden: false,
   },
+
   fields: {
     name: text(),
-    hashtags: relationship({ ref: "New.hashtags", many: true }),
+    categories: relationship({ ref: "Project.categories", many: true }),
   },
 });
-
-export default Hashtag;
