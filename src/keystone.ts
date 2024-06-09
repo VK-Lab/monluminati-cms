@@ -147,7 +147,7 @@ export default withAuth(
                   },
                 });
               } else {
-                user = await context.db.User.updateOne({
+                user = await context.prisma.user.update({
                   where: { id: user.id },
                   data: { name: profile.global_name, discordAvatar },
                 });
