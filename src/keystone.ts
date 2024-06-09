@@ -137,8 +137,7 @@ export default withAuth(
                 if (top > -1) {
                   remainingVotes = 50 - top;
                 }
-
-                user = await context.db.User.createOne({
+                user = await context.prisma.user.create({
                   data: {
                     discordId: profile.id,
                     username: profile.username,
